@@ -1,0 +1,1346 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="theme-color" content="#000000">
+
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="MovieFlix">
+<link rel="manifest" href="{% static 'manifest.json' %}"> <!--pws method-->
+
+<link href="{% static 'customer_panel/css/bootstrap.min.css' %}" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<title>Movieflix Web Series Customer</title>
+<link rel="icon" type="image/png" href="https://scontent.fhyd2-2.fna.fbcdn.net/v/t39.30808-6/470677166_122151867554334813_4968100224651989712_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=a5f93a&_nc_ohc=XReKaS319QQQ7kNvwFfKvnB&_nc_oc=Adn7baIumIr1_7HMkEwoGCmoWS7iXO7v5wDC64avM3l5jeOWTsGnzJjtK_aYKghL15tYHlY45uT1Ajj0tKg2lDfn&_nc_zt=23&_nc_ht=scontent.fhyd2-2.fna&_nc_gid=94_8ACsCd8RdLg38zTsPxQ&oh=00_AfuqOcdIM-ohXn97lLp_MqGBD8OopdOZELTX1FlvtF-Q2g&oe=699523E0">
+</head>
+<body>
+<div id="mobile-sidebar" 
+     style="position: fixed; top: 0; left: -250px; width: 230px; height: 100%; z-index: 9999; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); background: linear-gradient(to right, rgba(15, 15, 15, 1) 0%, rgba(15, 15, 15, 0.95) 75%, rgba(15, 15, 15, 0) 100%); overflow: hidden;">
+    
+    <div style="padding: 15px 0;">
+        <div style="display: flex; align-items: center; padding: 0 15px; margin-bottom: 20px; margin-top: 5px;">
+            <img style = "position:absolute;left:0;width:150px;height:50px;object-fit: cover;font-size:.7rem" src = "https://scontent.fhyd2-2.fna.fbcdn.net/v/t39.30808-6/470677166_122151867554334813_4968100224651989712_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=a5f93a&_nc_ohc=XReKaS319QQQ7kNvwFfKvnB&_nc_oc=Adn7baIumIr1_7HMkEwoGCmoWS7iXO7v5wDC64avM3l5jeOWTsGnzJjtK_aYKghL15tYHlY45uT1Ajj0tKg2lDfn&_nc_zt=23&_nc_ht=scontent.fhyd2-2.fna&_nc_gid=94_8ACsCd8RdLg38zTsPxQ&oh=00_AfuqOcdIM-ohXn97lLp_MqGBD8OopdOZELTX1FlvtF-Q2g&oe=699523E0">
+            <button onclick="toggleMobileNav(false)" style="background: none; border: none; color: white; margin-left: auto; padding: 0; cursor: pointer;">
+                <i class="bi bi-x-lg" style="font-size: 1.1rem;"></i>
+            </button>
+        </div>
+
+        <div id="sidebar-links-container">
+            <a href="{% url 'customer_dashboard' %}" class="m-side-link" style="display: flex; align-items: center; padding: 12px 20px; color: #e0e0e0; text-decoration: none; transition: 0.3s;">
+                <i class="bi bi-sliders" style="margin-right: 15px;"></i> Dashboard
+            </a>
+            <a href="{% url 'customer_movie' %}" class="m-side-link" style="display: flex; align-items: center; padding: 12px 20px; color: #e0e0e0; text-decoration: none; transition: 0.3s;">
+                <i class="bi bi-film" style="margin-right: 15px;"></i> Movies
+            </a>
+            <a href="{% url 'customer_web_series' %}" class="m-side-link" style="display: flex; align-items: center; padding: 12px 20px; color: #e0e0e0; text-decoration: none; transition: 0.3s;">
+                <i class="bi bi-tv" style="margin-right: 15px;"></i> Web Series
+            </a>
+            <a href="{% url 'customer_watch_history' %}" class="m-side-link" style="display: flex; align-items: center; padding: 12px 20px; color: #e0e0e0; text-decoration: none; transition: 0.3s;">
+                <i class="bi bi-clock-history" style="margin-right: 15px;"></i> History
+            </a>
+            <a href="{% url 'customer_liked_videos' %}" class="m-side-link" style="display: flex; align-items: center; padding: 12px 20px; color: #e0e0e0; text-decoration: none; transition: 0.3s;">
+                <i class="bi bi-heart" style="margin-right: 15px;"></i> Liked
+            </a>
+            <a href="{% url 'customer_subscriptions' %}" class="m-side-link" style="display: flex; align-items: center; padding: 12px 20px; color: #e0e0e0; text-decoration: none; transition: 0.3s;">
+                <i class="bi bi-credit-card-2-back-fill" style="margin-right: 15px;"></i> Subscriptions
+            </a>
+            <a href="{% url 'customer_profile_settings' %}" class="m-side-link" style="display: flex; align-items: center; padding: 12px 20px; color: #e0e0e0; text-decoration: none; transition: 0.3s;">
+                <i class="bi bi-gear" style="margin-right: 15px;"></i> Profile settings
+            </a>
+            <hr style="border-color: rgba(255,255,255,0.1); margin: 15px 20px;">
+            <a href="{% url 'customer_logout' %}" class="m-side-link" style="display: flex; align-items: center; padding: 12px 20px; color: #dc3545; text-decoration: none; transition: 0.3s;">
+                <i class="bi bi-box-arrow-left" style="margin-right: 15px;"></i> Logout
+            </a>
+        </div>
+    </div>
+</div>
+
+<div id="sidebar-overlay-global" 
+     onclick="toggleMobileNav(false)"
+     style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 9998; display: none;">
+</div>  
+<style>
+*{
+    margin:0;
+    padding:0;
+    touch-action: manipulation; /* to make app run faster */
+}
+/* ========================================
+    DESKTOP VERSION (Your Original Design)
+======================================== */
+.desktop-wrapper {
+    min-width: 1200px; /* Force desktop width */
+    overflow-x: hidden; /* Enable horizontal scroll on mobile */
+}.mobile-wrapper {
+    display: none;
+}
+.no-arrow {
+    /* Removes default browser styling for select/dropdown */
+    -webkit-appearance: none; /* Chrome, Safari, Edge */
+    appearance: none; 
+    
+    /* Ensures the background image (the arrow) isn't drawn if present */
+    background-image: none;
+}
+body {
+    background-color: #0f0f0f;
+    color: #e0e0e0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.side-bar {
+  transition:all 0.3s ease;
+}.side-bar:hover {
+    transform: translateX(5px);} 
+.series-container{
+    display: flex;
+    flex-wrap: wrap; /* This is the key: it forces items to the next line */
+    gap: 30px;
+    justify-content: flex-start;
+
+}
+.series-card {
+    position: relative; 
+    width: 200px;
+    height: 250px;
+    /* border: 2px solid rgba(72, 167, 208, 0.7); */
+    border-radius: 5px;
+    overflow: hidden; 
+    transition: all 0.6s ease-in-out; /* Smoother transition */
+    z-index: 1; 
+    cursor: pointer;
+    /* Set origin point to the top center to make it appear to grow downwards */
+    transform-origin: top center; 
+}
+
+.series-card:hover {
+    
+    transform: scale(1.2); 
+    box-shadow: 0 15px 25px rgba(67, 138, 185, 0.7);
+    z-index: 10; 
+}
+
+.series-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 5px;
+    transition: transform 0.6s ease-in-out; 
+}
+
+.series-card:hover img {
+    transform: scale(1.1);
+}
+
+.series-details {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    max-height: 0; 
+    background: rgba(0, 0, 0, 0.9); 
+    color: white;
+    padding: 0 0px;
+    transition: max-height 0.6s ease-in-out , padding 0.3s ease-in-out ; 
+    box-sizing: border-box;
+    overflow: hidden; 
+    font-size: 0.9em;
+}
+
+.series-card:hover .series-details {
+    max-height: 110px; 
+    padding: 10px;
+}
+
+/* Optional: Style the Watch Now button */
+.series-details .btn-light { 
+    margin: 5px 0;
+    font-size: 0.8rem;
+}
+
+/* Keep the modals sharp by ensuring they are not inside the blur div */
+
+#notification-items-list {
+    max-height: 350px; /* Limits the height of the dropdown */
+    overflow-y: auto;  /* Enables vertical scrolling */
+    overflow-x: hidden; /* Prevents horizontal shaking */
+}
+
+/* Professional scrollbar for Dark Mode */
+#notification-items-list::-webkit-scrollbar {
+    width: 5px;
+}
+#notification-items-list::-webkit-scrollbar-track {
+    background: #212529; 
+}
+#notification-items-list::-webkit-scrollbar-thumb {
+    background: #444; 
+    border-radius: 10px;
+}
+#notification-items-list::-webkit-scrollbar-thumb:hover {
+    background: #dc3545; /* Turns red when you hover over the scrollbar */
+}
+        /* ========================================
+           MOBILE VERSION (Bottom Navigation)
+        ======================================== */
+    @media screen and (max-width: 1024px) {
+    .desktop-wrapper { display: none !important; }
+    .mobile-wrapper { display: block !important; }
+    body { min-width: 100%; overflow-x: hidden; }
+    }
+
+    /* Functional Utility for JS Toggles */
+    .show { display: block !important; }
+    
+    /* Animation for Bottom Sheet */
+    .more-menu-sheet.show { bottom: 0 !important; }
+
+    /* Keep your existing Desktop styles below if needed, 
+       or rely on the inline styles you already added for desktop. */
+    body.modal-open .content-to-blur { filter: blur(1px); pointer-events: none; }
+    .modal { background: rgba(0, 0, 0, 0.1); z-index: 1060; }
+    
+    /* Scrollbar for notification list */
+    #notification-items-list::-webkit-scrollbar { width: 6px; }
+    #notification-items-list::-webkit-scrollbar-track { background: #1e1e1e; }
+    #notification-items-list::-webkit-scrollbar-thumb { background: #444; border-radius: 10px; }
+        
+</style>
+
+<div class = "desktop-wrapper "><header>
+<!-- ========================================
+     DESKTOP VERSION 
+======================================== -->
+<nav class = "bg d-flex align-items-center justify-content-between ms-auto" style = "position:fixed;top:0;width:100%;z-index:1050;height:60px;background-color:black">
+    <div class = "mb-0"><h3 style = "color:red;margin-left:10px;margin-bottom:0px;">
+        <img style = "width:150px;height:50px;object-fit: cover;font-size:.7rem" src = "https://scontent.fhyd2-2.fna.fbcdn.net/v/t39.30808-6/470677166_122151867554334813_4968100224651989712_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=a5f93a&_nc_ohc=XReKaS319QQQ7kNvwFfKvnB&_nc_oc=Adn7baIumIr1_7HMkEwoGCmoWS7iXO7v5wDC64avM3l5jeOWTsGnzJjtK_aYKghL15tYHlY45uT1Ajj0tKg2lDfn&_nc_zt=23&_nc_ht=scontent.fhyd2-2.fna&_nc_gid=94_8ACsCd8RdLg38zTsPxQ&oh=00_AfuqOcdIM-ohXn97lLp_MqGBD8OopdOZELTX1FlvtF-Q2g&oe=699523E0">
+    </h3>
+    </div>
+    <div class = "d-flex">
+
+        <div class = "btn ">
+            <a href = "/customer_panel/customer_search_page/" style = "color: white"><i class="bi bi-search"></i></a>
+        </div>
+
+        <!--for notifications dropdown-->
+         {% if current_sub.plan_type == 'premium' %}
+        <div class="dropdown notification-trigger" id="notificationDropdown">
+            <button class="btn position-relative me-2" type="button" data-bs-toggle="dropdown" style="color:white; background: transparent; border: none;">
+                <i class="bi bi-bell" style="font-size: 1.3rem;"></i>
+                {% if unread_count > 0 %}
+                    <span id="notification-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem; padding: 2px 5px;">
+                        {{ unread_count }}
+                    </span>
+                {% endif %}
+            </button>
+            
+            <ul class="dropdown-menu dropdown-menu-end border-0 p-0" style="min-width: 380px; max-width: 400px; max-height: 450px; background-color: #1a1a1a; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.7); overflow-y: auto;">
+                
+                <li class="dropdown-header d-flex justify-content-between align-items-center" style="padding: 15px; border-bottom: 1px solid #333; background-color: #000; position: sticky; top: 0; z-index: 10; border-radius: 10px 10px 0 0;">
+                    <h6 style="margin: 0; color: #fff; font-size: 1rem; font-weight: 500;">Notifications</h6>
+                    <button id="clear-all-btn" class="btn btn-sm text-danger border-0 p-0" style="font-size: 0.75rem;">Clear All</button>
+                </li>
+
+                 <div class="notification-item-wrapper" id="notification-items-list">
+                    {% for n in notifications %}
+                        <li id="notification-row-{{ n.id }}" style="position: relative;">
+                            
+                            <div class="d-flex align-items-center justify-content-between" 
+                                style="padding: 12px 15px; border-bottom: 1px solid #2a2a2a; transition: background 0.2s;"
+                                onmouseover="this.style.backgroundColor='#252525'; this.querySelector('.notif-msg').style.color='#e0e0e0';" 
+                                onmouseout="this.style.backgroundColor='transparent'; this.querySelector('.notif-msg').style.color='#999';">
+                                
+                                <a class="d-flex align-items-center text-decoration-none flex-grow-1" 
+                                href="{{ n.redirect_url|default:'#' }}" 
+                                style="gap: 12px; margin-right: 10px; overflow: hidden; min-width: 0;">
+                                    
+                                    {% if n.image %}
+                                        <img src="{{ n.image.url }}" alt="thumb" style="width: 70px; height: 50px; border-radius: 5px; object-fit: cover; flex-shrink: 0;">
+                                    {% else %}
+                                        <div style="width: 70px; height: 50px; background: #333; border-radius: 5px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                            <i class="bi bi-film" style="font-size: 1.5rem; color: #fff;"></i>
+                                        </div>
+                                    {% endif %}
+
+                                    <div style="flex: 1; min-width: 0;">
+                                        <b class="d-block text-white text-truncate" style="font-size: 0.9rem; margin-bottom: 3px;">{{ n.title }}</b>
+                                        <span class="notif-msg text-truncate d-block" style="font-size: 0.8rem; line-height: 1.2; color: #999; transition: color 0.2s;">{{ n.message }}</span>
+                                    </div>
+                                </a>
+
+                                <div class="dropdown">
+                                    <button class="btn btn-link text-secondary p-0" type="button" 
+                                            data-bs-toggle="dropdown" aria-expanded="false" 
+                                            style="text-decoration: none; font-size: 1.2rem; line-height: 1;"
+                                            onclick="event.stopPropagation();"> <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow-sm" style="min-width: 120px; background-color: #2a2a2a;">
+                                        <li>
+                                            <a class="dropdown-item text-danger small" href="javascript:void(0);" 
+                                            onclick="deleteSingleNotification('{{ n.id }}', event)">
+                                                <i class="bi bi-trash me-2"></i>Delete
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                    {% empty %}
+                        <div style="text-align: center; padding: 40px 20px; color: #666;">
+                            <i class="bi bi-bell-slash" style="font-size: 3rem; margin-bottom: 10px; display: block;"></i>
+                            <div style="font-size: 0.9rem;">No new notifications</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </ul>
+        </div>
+        {% else %}
+        <a class="btn position-relative me-2" type="button" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#premiumModal" style="color:white; background: transparent; border: none;">
+            <i class="bi bi-bell" style="font-size: 1.3rem;"></i>
+        </a>
+        {% endif %}
+        <!---->
+        
+    <div class="dropdown" style="position:relative; right:5px; display: inline-block;">
+        <div data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;">
+            {% if customer.customer_profile_pic %}
+                <img src="{{ customer.customer_profile_pic.url }}" 
+                    style="width:40px; height:40px; border-radius:50%; object-fit:cover;" 
+                    class="me-2">
+            {% else %}
+                <img src="https://www.citypng.com/public/uploads/preview/hd-photo-camera-black-icon-png-11637125301j0pnozhh0u.png" 
+                    style="width:40px; height:40px; border-radius:50%;" 
+                    class="me-2">
+            {% endif %}
+        </div>
+
+        <ul class="dropdown-menu dropdown-menu-end border-0 p-0" style="width: 220px; background-color: #1a1a1a; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.7); overflow: hidden;">
+            
+            <li style="padding: 15px; border-bottom: 1px solid #333; background-color: #000;">
+                <div style="font-weight: bold; color: #fff; font-size: 1rem; line-height: 1.2;">{{ customer.customer_username }}</div>
+                <div style="font-size: 0.8rem; color: #999;">Customer Panel</div>
+            </li>
+            
+            <li>
+                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#profileModal" 
+                onmouseover="this.style.backgroundColor='#252525';" onmouseout="this.style.backgroundColor='transparent';"
+                style="display: flex; align-items: center; gap: 12px; padding: 12px 15px; color: #e0e0e0; border-bottom: 1px solid #2a2a2a; transition: 0.2s; background-color: transparent;">
+                    <i class="bi bi-person-circle" style="font-size: 1.1rem; width: 20px;"></i>
+                    <span>View Profile</span>
+                </a>
+            </li>
+
+            <li>
+                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#editProfileModal" 
+                onmouseover="this.style.backgroundColor='#252525';" onmouseout="this.style.backgroundColor='transparent';"
+                style="display: flex; align-items: center; gap: 12px; padding: 12px 15px; color: #e0e0e0; border-bottom: 1px solid #2a2a2a; transition: 0.2s; background-color: transparent;">
+                    <i class="bi bi-pencil-square" style="font-size: 1.1rem; width: 20px;"></i>
+                    <span>Edit Profile</span>
+                </a>
+            </li>
+
+            <li>
+                <a class="dropdown-item" href="/customer_panel/customer_profile_settings_page/" 
+                onmouseover="this.style.backgroundColor='#252525';" onmouseout="this.style.backgroundColor='transparent';"
+                style="display: flex; align-items: center; gap: 12px; padding: 12px 15px; color: #e0e0e0; border-bottom: 1px solid #2a2a2a; transition: 0.2s; background-color: transparent;">
+                    <i class="bi bi-gear-fill" style="font-size: 1.1rem; width: 20px;"></i>
+                    <span>Profile Settings</span>
+                </a>
+            </li>
+
+            <li>
+                <a class="dropdown-item" href="/customer_panel/customer_logout_action/" 
+                onmouseover="this.style.backgroundColor='#252525';" onmouseout="this.style.backgroundColor='transparent';"
+                style="display: flex; align-items: center; gap: 12px; padding: 12px 15px; color: #dc3545; transition: 0.2s; background-color: transparent;">
+                    <i class="bi bi-box-arrow-right" style="font-size: 1.1rem; width: 20px;"></i>
+                    <span style="font-weight: 500;">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+      </div>
+</nav></header>
+
+<main class="d-flex ">
+<div class="d-flex" style="min-height:645px;">
+    <div class="d-flex flex-column" 
+        onmouseenter="
+            this.style.width='350px'; 
+            this.style.background='linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0.95) 20%, rgba(0,0,0,0.8) 40%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0.2) 80%, rgba(0,0,0,0) 100%)'; 
+            var labels = this.querySelectorAll('.sb-label'); 
+            labels.forEach(function(l){ 
+                l.style.opacity='1'; 
+                l.style.visibility='visible'; 
+                l.style.transform='translateX(0)';
+            });" 
+        onmouseleave="
+            this.style.width='70px'; 
+            /* Fix: Only the icon area stays solid; the rest remains transparent while shrinking */
+            this.style.background='linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 70px, rgba(0,0,0,0) 100%)'; 
+            var labels = this.querySelectorAll('.sb-label'); 
+            labels.forEach(function(l){ 
+                l.style.opacity='0'; 
+                l.style.visibility='hidden'; 
+                l.style.transform='translateX(-20px)';
+            });"
+        style="position:fixed; top:60px; z-index:1050; height:calc(100vh - 60px); width:70px; flex-shrink: 0; 
+               background: linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 70px, rgba(0,0,0,0) 100%); 
+               padding-top:20px; transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1), background 0.4s ease; 
+               overflow: hidden; white-space: nowrap; border-right: none;">
+        
+        <a class="side-bar mb-3" href="/customer_panel/customer_search_page/" style="text-align:start; text-decoration:none; color:white; padding:12px 25px; display: flex; align-items: center; width: 350px;">
+            <div style="width: 20px; text-align: center; flex-shrink: 0;"><i class="bi bi-search" style="font-size: 1.2rem;"></i></div>
+            <span class="sb-label" style="opacity: 0; visibility: hidden; transform: translateX(-20px); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); font-size: 0.95rem; font-weight: 500; margin-left: 25px;">Search</span>
+        </a>
+
+        <a class="side-bar mb-3" href="/customer_panel/customer_dashboard_page/" style="text-align:start; text-decoration:none; color:white; padding:12px 25px; display: flex; align-items: center; width: 350px;">
+            <div style="width: 20px; text-align: center; flex-shrink: 0;"><i class="bi bi-sliders" style="font-size: 1.2rem;"></i></div>
+            <span class="sb-label" style="opacity: 0; visibility: hidden; transform: translateX(-20px); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); font-size: 0.95rem; font-weight: 500; margin-left: 25px;">Dashboard</span>
+        </a>
+
+        <a class="side-bar mb-3" href="/customer_panel/customer_movie_page/" style="text-align:start; text-decoration:none; color:white; padding:12px 25px; display: flex; align-items: center; width: 350px;">
+            <div style="width: 20px; text-align: center; flex-shrink: 0;"><i class="bi bi-film" style="font-size: 1.2rem;"></i></div>
+            <span class="sb-label" style="opacity: 0; visibility: hidden; transform: translateX(-20px); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); font-size: 0.95rem; font-weight: 500; margin-left: 25px;">Movies</span>
+        </a>
+
+        <a class="side-bar mb-3" href="/customer_panel/customer_web_series_page/" style="text-align:start; text-decoration:none; color:white; padding:12px 25px; display: flex; align-items: center; width: 350px;">
+            <div style="width: 20px; text-align: center; flex-shrink: 0;"><i class="bi bi-tv" style="font-size: 1.2rem; color: red;"></i></div>
+            <span class="sb-label" style=" color: red;opacity: 0; visibility: hidden; transform: translateX(-20px); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); font-size: 0.95rem; font-weight: 500; margin-left: 25px;">Web Series</span>
+        </a>
+        {% if current_sub.plan_type == 'premium' %}
+        <a class="side-bar mb-3" href="/customer_panel/customer_watch_history_page/" style="text-align:start; text-decoration:none; color:white; padding:12px 25px; display: flex; align-items: center; width: 350px;">
+            <div style="width: 20px; text-align: center; flex-shrink: 0;"><i class="bi bi-clock-history" style="font-size: 1.2rem;"></i></div>
+            <span class="sb-label" style="opacity: 0; visibility: hidden; transform: translateX(-20px); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); font-size: 0.95rem; font-weight: 500; margin-left: 25px;">Watch History</span>
+        </a>
+        {% else %}
+        <a class="side-bar mb-3" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#premiumModal" style="text-align:start; text-decoration:none; color:white; padding:12px 25px; display: flex; align-items: center; width: 350px;">
+            <div style="width: 20px; text-align: center; flex-shrink: 0;"><i class="bi bi-file-lock" style="font-size: 1.2rem;"></i></div>
+            <span class="sb-label" style="opacity: 0; visibility: hidden; transform: translateX(-20px); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); font-size: 0.95rem; font-weight: 500; margin-left: 25px;">Watch History</span>
+        </a>
+        {% endif %}
+
+        {% if current_sub.plan_type == 'premium' %}
+        <a class="side-bar mb-3" href="/customer_panel/customer_liked_videos_page/" style="text-align:start; text-decoration:none; color:white; padding:12px 25px; display: flex; align-items: center; width: 350px;">
+            <div style="width: 20px; text-align: center; flex-shrink: 0;"><i class="bi bi-heart" style="font-size: 1.2rem;"></i></div>
+            <span class="sb-label" style="opacity: 0; visibility: hidden; transform: translateX(-20px); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); font-size: 0.95rem; font-weight: 500; margin-left: 25px;">Liked Videos</span>
+        </a>
+        {% else %}
+        <a class="side-bar mb-3" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#premiumModal" style="text-align:start; text-decoration:none; color:white; padding:12px 25px; display: flex; align-items: center; width: 350px;">
+            <div style="width: 20px; text-align: center; flex-shrink: 0;"><i class="bi bi-file-lock" style="font-size: 1.2rem;"></i></div>
+            <span class="sb-label" style="opacity: 0; visibility: hidden; transform: translateX(-20px); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); font-size: 0.95rem; font-weight: 500; margin-left: 25px;">Liked Videos</span>
+        </a>
+        {% endif %}
+
+        <a class="side-bar mb-3" href="/customer_panel/customer_subscriptions/" style="text-align:start; text-decoration:none; color:white; padding:12px 25px; display: flex; align-items: center; width: 350px;">
+            <div style="width: 20px; text-align: center; flex-shrink: 0;"><i class="bi bi-credit-card-2-back-fill" style="font-size: 1.2rem;"></i></div>
+            <span class="sb-label" style="opacity: 0; visibility: hidden; transform: translateX(-20px); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); font-size: 0.95rem; font-weight: 500; margin-left: 25px;">Subscriptions</span>
+        </a>
+
+        <a class="side-bar mb-3" href="/customer_panel/customer_profile_settings_page/" style="text-align:start; text-decoration:none; color:white; padding:12px 25px; display: flex; align-items: center; width: 350px;">
+            {% if customer.customer_profile_pic %}
+            <div style="width: 23px; text-align: center; flex-shrink: 0;">
+                <img  style = "width:23px;height:23px;border-radius:50%;object-fit:cover;" src = "{{ customer.customer_profile_pic.url }}">
+            </div>
+            <span class="sb-label" style="opacity: 0; visibility: hidden; transform: translateX(-20px); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); font-size: 0.95rem; font-weight: 500; margin-left: 25px;">Settings</span>
+            {% else %}
+            <div style="width: 23px; text-align: center; flex-shrink: 0;">
+                <img  style = "width:23px;height:23px;border-radius:50%;object-fit:cover;" src = "https://www.citypng.com/public/uploads/preview/hd-photo-camera-black-icon-png-11637125301j0pnozhh0u.png">
+            </div>
+            <span class="sb-label" style="opacity: 0; visibility: hidden; transform: translateX(-20px); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); font-size: 0.95rem; font-weight: 500; margin-left: 25px;">Settings</span>
+            {% endif %}
+        </a>
+
+        <a class="side-bar mb-4 mt-auto" href="/customer_panel/customer_logout_action/" style="text-align:start; text-decoration:none; color:white; padding:12px 25px; display: flex; align-items: center; width: 350px;">
+            <div style="width: 20px; text-align: center; flex-shrink: 0;"><i class="bi bi-box-arrow-right" style="font-size: 1.2rem;"></i></div>
+            <span class="sb-label" style="opacity: 0; visibility: hidden; transform: translateX(-20px); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); font-size: 0.95rem; font-weight: 500; margin-left: 25px;">Logout</span>
+        </a>
+    </div>
+
+    <div style="width: 70px; flex-shrink: 0;"></div>
+</div>
+
+    <div style = "margin-top:60px;width:100vw;padding:20px 40px;background-color:rgb(20, 20, 20)">
+        <div class = "text-white d-flex justify-content-between">
+            <h3><b>Popular Web Series</b></h3>
+            
+        </div>
+        
+            <form method="GET" action="{% url 'customer_web_series' %}" class="row g-3 mb-4 align-items-end px-2 ">
+                <div class="col-md-3">
+                    <label class="text-white-50 small mb-1">Language</label>
+                    <select name="language" onchange="this.form.submit()" class="form-select bg-dark text-white border-secondary">
+                        <option value="">All Languages</option>
+                        {% for lang in languages %}
+                            <option value="{{ lang.id }}" 
+                                {% if lang.id|stringformat:"s" == selected_lang|stringformat:"s" %}selected{% endif %}>
+                                {{ lang.language_name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="text-white-50 small mb-1">Genre</label>
+                    <select name="genre" class="form-select bg-dark text-white border-secondary" onchange="this.form.submit()">
+                        <option value="">All Series</option>
+                        {% for genre in genres %}
+                            <option value="{{ genre.id }}" {% if genre.id|stringformat:"s" == selected_genre %}selected{% endif %}>
+                                {{ genre.genre_name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <a href="{% url 'customer_web_series' %}?language=" class="btn btn-secondary w-100">Clear All</a>
+                </div>
+            </form>
+        
+    <div class = "d-flex flex-row " style = "padding-top:20px;">
+        
+
+        <div class="d-flex series-container justify-content-start">
+       {% for series in all_series %}
+        <div class="series-card me-2 mb-5" style="margin-left:10px"> 
+            <a href="{% url 'customer_series_player_page' series.id %}">
+                <img src="{{ series.series_banner.url }}" alt="{{ series.series_title }}">
+            </a> 
+            <div class="series-details">
+
+                {% if is_subscribed %}
+                <a href="{% url 'customer_series_player_page' series.id %}" class="btn btn-light " style = "font-size:.5rem">
+                Watch Now
+                </a>
+                {% else %}
+                    <a href="{% url 'customer_subscriptions' %}" class="btn btn-warning" style = "font-size:.5rem">Subscribe to Watch</a>
+                {% endif %}
+
+                <p style="font-size:0.8rem;margin-bottom: 2px; font-weight: bold;">{{ series.series_title }}</p>
+                <p style="font-size: 0.6em; margin-bottom: 5px;">{{ series.release_date|date:"Y" }} | Seasons : {{ series.total_seasons }} </p>
+                <p style="font-size: 0.6em; margin-bottom: 5px;">{{ series.series_language.language_name }} | {{ series.series_genre.genre_name }}</p>
+            </div>
+        </div> 
+
+        {% empty %}
+        <div class="col-12 text-center text-white">
+        <p>No Web Series available at the moment. Please check back later!</p>
+        </div>
+        
+       
+    {% endfor %}
+</div>
+       
+    </div>     
+</main>
+
+<footer>
+
+    <div class = "d-flex justify-content-center align-items-center text-white" style = "background-color:black;height:51px;">
+        <div style = "position:relative;left:80px"> @copyrightramanasoft</div>
+        <div class = "d-flex justify-content-center align-items-center" style = "position:relative;left:580px;">
+            <a href = "#"><img src = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Facebook_logo_%28square%29.png/500px-Facebook_logo_%28square%29.png" 
+             class = "me-3" style = "width:20px;height:20px;"></a>
+            <a href = "#"><img src = "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/2044px-WhatsApp.svg.png" 
+            class = "me-3" style = "width:20px;height:20px;"></a>
+            <a href = "#"><img src = "https://toppng.com/uploads/preview/instagram-png-logo-11545512103yiiajkgr2i.png" 
+            class = "me-2" style = "width:20px;height:20px;border-radius:5px"></a>
+            <a href = "#"><img src = "https://logos-world.net/wp-content/uploads/2020/04/Twitter-Emblem.png" 
+             style = "width:35px;height:20px"></a>
+        </div>
+    </div>
+
+
+</footer>
+</div> <!--div close tag for content-to-blur class (don't remove this)-->
+
+<!-- ========================================
+     MOBILE VERSION (Bottom Navigation)
+======================================== -->
+<div class="mobile-wrapper">
+    
+    <header style="position: fixed; top: 0; left: 0; right: 0; height: 60px; background-color: #000; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; z-index: 1050; box-shadow: 0 2px 10px rgba(0,0,0,0.5);">
+        <div style="color: #dc3545; font-size: 1.5rem; font-weight: bold;" onclick="toggleMobileNav(true)" style="cursor: pointer;">
+            <img style = "position:absolute;left:-2px;top:7px;width:150px;height:50px;object-fit: cover;font-size:.7rem" src = "https://scontent.fhyd2-2.fna.fbcdn.net/v/t39.30808-6/470677166_122151867554334813_4968100224651989712_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=a5f93a&_nc_ohc=XReKaS319QQQ7kNvwFfKvnB&_nc_oc=Adn7baIumIr1_7HMkEwoGCmoWS7iXO7v5wDC64avM3l5jeOWTsGnzJjtK_aYKghL15tYHlY45uT1Ajj0tKg2lDfn&_nc_zt=23&_nc_ht=scontent.fhyd2-2.fna&_nc_gid=94_8ACsCd8RdLg38zTsPxQ&oh=00_AfuqOcdIM-ohXn97lLp_MqGBD8OopdOZELTX1FlvtF-Q2g&oe=699523E0">
+        </div>
+
+        
+        <div class = "px-2 py-2 ms-auto me-2 ">
+            <a href = "/customer_panel/customer_search_page/" style = "color: white"><i class="bi bi-search"></i></a>
+        </div>
+        
+        <div style="display: flex; gap: 15px; align-items: center;">
+        
+        <!-- mobile notifications -->
+        {% if current_sub.plan_type == 'premium' %}
+        <div class="dropdown notification-trigger" id="mobileNotificationDropdown">
+        <div style="position: relative;" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-bell" style="font-size: 1.3rem; color: #fff; cursor: pointer;"></i>
+            {% if unread_count > 0 %}
+                <span class="notification-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem; padding: 2px 5px;">
+                    {{ unread_count }}
+                </span>
+            {% endif %}
+        </div>
+
+        <div class="dropdown-menu border-0 p-0" style="position: fixed; top: 60px; right: 0; width: 100%; min-width:350px; max-width: 380px; max-height: 450px; background-color: #1a1a1a; border-radius: 0 0 0 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.7); z-index: 1100; overflow-y: auto;">
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #333; background-color: #000; position: sticky; top: 0; z-index: 10;">
+                <h6 style="margin: 0; color: #fff; font-size: 1rem;">Notifications</h6>
+                <button id="mobile-clear-notifications" class="btn btn-sm text-danger p-0" style="font-size: 0.75rem;">Clear All</button>
+            </div>
+
+            <div class="notification-items-list-container">
+                {% if notifications %}
+                    {% for n in notifications %}
+                        <div class="notification-item-wrapper" id="notification-row-{{ n.id }}" style="position: relative; border-bottom: 1px solid #2a2a2a;">
+                            
+                            <div class="d-flex align-items-center justify-content-between" style="padding: 12px 15px;">
+                                
+                                <a href="{{ n.redirect_url|default:'#' }}" style="display: flex; gap: 12px; color: #e0e0e0; text-decoration: none; flex: 1; min-width: 0;">
+                                    {% if n.image %}
+                                        <img src="{{ n.image.url }}" alt="thumb" style="width: 70px; height: 50px; border-radius: 5px; object-fit: cover; flex-shrink: 0;">
+                                    {% else %}
+                                        <div style="width: 70px; height: 50px; background: #333; border-radius: 5px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                            <i class="bi bi-film" style="font-size: 1.5rem; color: #fff;"></i>
+                                        </div>
+                                    {% endif %}
+                                    
+                                    <div style="flex: 1; min-width: 0;">
+                                        <div style="font-weight: bold; font-size: 0.9rem; margin-bottom: 3px; color: #fff;" class="text-truncate">{{ n.title }}</div>
+                                        <div style="font-size: 0.8rem; color: #999;" class="text-truncate">{{ n.message }}</div>
+                                    </div>
+                                </a>
+
+                                <div class="dropdown">
+                                    <button class="btn btn-link text-secondary p-0 ps-2" type="button" 
+                                            data-bs-toggle="dropdown" 
+                                            style="text-decoration: none; font-size: 1.2rem;"
+                                            onclick="event.stopPropagation();">
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow" style="background-color: #2a2a2a; border: 1px solid #444;">
+                                        <li>
+                                            <a class="dropdown-item text-danger small" href="javascript:void(0);" 
+                                            onclick="deleteSingleNotification('{{ n.id }}', event)">
+                                                <i class="bi bi-trash me-2"></i>Delete
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div style="text-align: center; padding: 40px 20px; color: #666;">
+                        <i class="bi bi-bell-slash" style="font-size: 3rem; margin-bottom: 10px; display: block;"></i>
+                        <div>No new notifications</div>
+                    </div>
+                {% endif %}
+            </div>
+            </div>
+            </div>
+        {% else %}
+        <div style="position: relative;"><a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#premiumModal">
+            <i class="bi bi-bell" style="font-size: 1.3rem; color: #fff; cursor: pointer;"></i></a>
+        </div>
+        {% endif %}
+
+            {% if customer.customer_profile_pic %}
+                <img src="{{ customer.customer_profile_pic.url }}" id="mobile-profile-btn" alt="Profile" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; cursor: pointer;">
+            {% else %}
+                <i class="bi bi-person-circle" id="mobile-profile-btn" style="font-size: 1.8rem; color: #fff; cursor: pointer;"></i>
+            {% endif %}
+        </div>
+    </header>
+
+  
+
+    <div id="mobile-profile-dropdown" style="position: fixed; top: 60px; right: 10px; width: 220px; background-color: #1a1a1a; border: 1px solid #333; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.7); z-index: 1100; display: none;">
+        <div style="padding: 15px; border-bottom: 1px solid #333; background-color: #000;">
+            <div style="font-weight: bold; color: #fff; font-size: 1rem;">{{ customer.customer_username }}</div>
+            <div style="font-size: 0.8rem; color: #999;">Customer Panel</div>
+        </div>
+        
+        <a href="#" data-bs-toggle="modal" data-bs-target="#profileModal" style="display: flex; align-items: center; gap: 12px; padding: 12px 15px; color: #e0e0e0; text-decoration: none; border-bottom: 1px solid #2a2a2a;">
+            <i class="bi bi-person-circle" style="width: 20px; font-size: 1.1rem;"></i>
+            <span>View Profile</span>
+        </a>
+        <a href="#" data-bs-toggle="modal" data-bs-target="#editProfileModal" style="display: flex; align-items: center; gap: 12px; padding: 12px 15px; color: #e0e0e0; text-decoration: none; border-bottom: 1px solid #2a2a2a;">
+            <i class="bi bi-pencil-square" style="width: 20px; font-size: 1.1rem;"></i>
+            <span>Edit Profile</span>
+        </a>
+        <a href="/customer_panel/customer_profile_settings_page/" style="display: flex; align-items: center; gap: 12px; padding: 12px 15px; color: #e0e0e0; text-decoration: none; border-bottom: 1px solid #2a2a2a;">
+            <i class="bi bi-gear-fill" style="width: 20px; font-size: 1.1rem;"></i>
+            <span>Profile Settings</span>
+        </a>
+        <a href="/customer_panel/customer_logout_action/" style="display: flex; align-items: center; gap: 12px; padding: 12px 15px; color: #dc3545; text-decoration: none; border-bottom: none; border-radius: 0 0 8px 8px;">
+            <i class="bi bi-box-arrow-right" style="width: 20px; font-size: 1.1rem;"></i>
+            <span>Logout</span>
+        </a>
+    </div>
+
+    <div id="more-menu-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); z-index: 1998; display: none;"></div>
+
+    <div id="more-menu-sheet" class="more-menu-sheet" style="position: fixed; bottom: -400px; left: 0; right: 0; background-color: #1a1a1a; border-radius: 20px 20px 0 0; z-index: 1999; transition: bottom 0.3s ease; max-height: 400px; overflow-y: auto;">
+        <div style="padding: 15px 20px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center;">
+            <h6 style="margin: 0; color: #fff; font-size: 1.1rem;">More Options</h6>
+            <button id="more-menu-close" style="background: none; border: none; color: #999; font-size: 1.5rem; cursor: pointer;">
+                <i class="bi bi-x"></i>
+            </button>
+        </div>
+        <a href="/customer_panel/customer_subscriptions/" style="display: flex; align-items: center; gap: 15px; padding: 15px 20px; color: #e0e0e0; text-decoration: none; border-bottom: 1px solid #2a2a2a;">
+            <i class="bi bi-credit-card-2-back-fill" style="width: 25px; font-size: 1.2rem;"></i>
+            <span>Subscriptions</span>
+        </a>
+        <a href="/customer_panel/customer_profile_settings_page/" style="display: flex; align-items: center; gap: 15px; padding: 15px 20px; color: #e0e0e0; text-decoration: none; border-bottom: 1px solid #2a2a2a;">
+            <i class="bi bi-gear" style="width: 25px; font-size: 1.2rem;"></i>
+            <span>Profile Settings</span>
+        </a>
+        <a href="/customer_panel/customer_logout_action/" style="display: flex; align-items: center; gap: 15px; padding: 15px 20px; color: #dc3545; text-decoration: none; border-bottom: 1px solid #2a2a2a;">
+            <i class="bi bi-box-arrow-right" style="width: 25px; font-size: 1.2rem;"></i>
+            <span>Logout</span>
+        </a>
+    </div>
+
+    <main style="margin-top: 60px; padding: 20px 15px; padding-bottom: 80px; min-height: calc(100vh - 125px); background-color: #0f0f0f;">
+        <div class = "d-flex flex-column">
+        <div style = "width:100%;background-color:rgb(20, 20, 20)">
+        <div class = "text-white d-flex justify-content-between">
+            <h3><b>Popular Web Series</b></h3>
+            <p>search</p>
+        </div>
+        
+            <form method="GET" action="{% url 'customer_web_series' %}" class="row g-3 mb-4 align-items-end px-2 ">
+                <div class="col-md-2" style = "width:40%;">
+                    <label class="text-white-50 small mb-1">Language</label>
+                    <select name="language" onchange="this.form.submit()" class="form-select bg-dark text-white border-secondary">
+                        <option value="">All Languages</option>
+                        {% for lang in languages %}
+                            <option value="{{ lang.id }}" 
+                                {% if lang.id|stringformat:"s" == selected_lang|stringformat:"s" %}selected{% endif %}>
+                                {{ lang.language_name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-2" style = "width:40%;">
+                    <label class="text-white-50 small mb-1">Genre</label>
+                    <select name="genre" class="form-select bg-dark text-white border-secondary" onchange="this.form.submit()">
+                        <option value="">All Series</option>
+                        {% for genre in genres %}
+                            <option value="{{ genre.id }}" {% if genre.id|stringformat:"s" == selected_genre %}selected{% endif %}>
+                                {{ genre.genre_name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-2" style = "width:20%">
+                    <a href="{% url 'customer_web_series' %}?language=" class="btn btn-secondary w-100"><i class="bi bi-stars"></i></a>
+                </div>
+            </form>
+        
+    <div class = "d-flex flex-row " style = "padding-top:20px;">
+        
+        <div class="d-flex series-container justify-content-start">
+       {% for series in all_series %}
+        <div class="series-card  mb-2" style="width:160px;margin-left:5px"> 
+            <a href="{% url 'customer_series_player_page' series.id %}">
+                <img src="{{ series.series_banner.url }}" alt="{{ series.series_title }}">
+            </a> 
+            <div class="series-details"> <!--// hidden series details in mobile version intentionally by adding extra 's' to class name-->
+
+                {% if is_subscribed %}
+                <a href="{% url 'customer_series_player_page' series.id %}" class="btn btn-light " style = "font-size:.5rem">
+                Watch Now
+                </a>
+                {% else %}
+                    <a href="{% url 'customer_subscriptions' %}" class="btn btn-warning" style = "font-size:.5rem">Subscribe to Watch</a>
+                {% endif %}
+
+                <p style="font-size:0.8rem;margin-bottom: 2px; font-weight: bold;">{{ series.series_title }}</p>
+                <p style="font-size: 0.6em; margin-bottom: 5px;">{{ series.release_date|date:"Y" }} | Seasons : {{ series.total_seasons }} </p>
+                <p style="font-size: 0.6em; margin-bottom: 5px;">{{ series.series_language.language_name }} | {{ series.series_genre.genre_name }}</p>
+            </div>
+        </div> 
+
+        {% empty %}
+        <div class="col-12 text-center text-white">
+        <p>No Web Series available at the moment. Please check back later!</p>
+        </div>
+        
+       
+       {% endfor %}
+       </div>
+       
+
+
+        </div>
+    </main>
+
+    <nav style="position: fixed; bottom: 0; left: 0; right: 0; height: 65px; background-color: #000; display: flex; justify-content: space-around; align-items: center; padding: 0 10px; z-index: 1050; box-shadow: 0 -2px 10px rgba(0,0,0,0.5); border-top: 1px solid #1a1a1a;">
+        <a href="/customer_panel/customer_dashboard_page/" class="bottom-nav-item active" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: #888; padding: 5px 8px; min-width: 55px;">
+            <i class="bi bi-sliders" style="font-size: 1.4rem; margin-bottom: 3px;"></i>
+            <span style="font-size: 0.65rem; font-weight: 500;">Dashboard</span>
+        </a>
+        
+        <a href="/customer_panel/customer_movie_page/" class="bottom-nav-item" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: #888; padding: 5px 8px; min-width: 55px;">
+            <i class="bi bi-film" style="font-size: 1.4rem; margin-bottom: 3px;"></i>
+            <span style="font-size: 0.65rem; font-weight: 500;">Movies</span>
+        </a>
+        
+        <a href="/customer_panel/customer_web_series_page/" class="bottom-nav-item" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: #dc3545; padding: 5px 8px; min-width: 55px;">
+            <i class="bi bi-tv" style="font-size: 1.4rem; margin-bottom: 3px;"></i>
+            <span style="font-size: 0.65rem; font-weight: 500;">Series</span>
+        </a>
+        
+                   
+        {% if current_sub.plan_type == 'premium' %}
+        <a href="/customer_panel/customer_watch_history_page/" class="bottom-nav-item" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: #888; padding: 5px 8px; min-width: 55px;">
+            <i class="bi bi-clock-history" style="font-size: 1.4rem; margin-bottom: 3px;"></i>
+            <span style="font-size: 0.65rem; font-weight: 500;">History</span>
+        </a>
+        {% else %}
+        <a  href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#premiumModal"
+         class="bottom-nav-item" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: #888; padding: 5px 8px; min-width: 55px;">
+            <i class="bi bi-file-lock" style="font-size: 1.4rem; margin-bottom: 3px;"></i>
+            <span style="font-size: 0.65rem; font-weight: 500;">History</span>
+        </a>
+        {% endif %}
+        
+        {% if current_sub.plan_type == 'premium' %}
+        <a href="/customer_panel/customer_liked_videos_page/" class="bottom-nav-item" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: #888; padding: 5px 8px; min-width: 55px;">
+            <i class="bi bi-heart" style="font-size: 1.4rem; margin-bottom: 3px;"></i>
+            <span style="font-size: 0.65rem; font-weight: 500;">Liked</span>
+        </a>
+        {% else %}
+        <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#premiumModal" class="bottom-nav-item" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: #888; padding: 5px 8px; min-width: 55px;">
+            <i class="bi bi-file-lock" style="font-size: 1.4rem; margin-bottom: 3px;"></i>
+            <span style="font-size: 0.65rem; font-weight: 500;">Liked</span>
+        </a>
+        {% endif %}
+        
+        <a href="#" class="bottom-nav-item" id="more-nav-btn" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: #888; padding: 5px 8px; min-width: 55px;">
+            <i class="bi bi-three-dots" style="font-size: 1.4rem; margin-bottom: 3px;"></i>
+            <span style="font-size: 0.65rem; font-weight: 500;">More</span>
+        </a>
+    </nav>
+
+</div>
+
+
+<!-- view profile modal -->
+<div class="modal fade" id="profileModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background-color: rgb(24, 24, 24); color: white; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1);">
+      
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title" id="profileModalLabel">
+            <i class="bi bi-person-badge me-2"></i>Profile Details
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body text-center pt-4">
+        <div class="img-area mx-auto mb-3 shadow-lg" style="height:110px; width:110px; border-radius:50%; overflow:hidden; border: .5px solid white;">
+            <img src="{{ customer.customer_profile_pic.url }}" style="width:100%; height:100%; object-fit:cover;">
+        </div>
+        
+        <h4 class="fw-bold mb-4">{{ customer.customer_username }}</h4>
+        
+        <div class="text-start p-4 mx-2" style="background-color: rgba(255, 255, 255, 0.05); border-radius: 12px;">
+            <div class="row g-3">
+                <div class="col-6">
+                    <small class="text-secondary text-uppercase" style="font-size: 0.75rem; letter-spacing: 1px;">First Name</small>
+                    <div class="fs-6 fw-bold text-white">{{ customer.customer_first_name }}</div>
+                </div>
+                <div class="col-6">
+                    <small class="text-secondary text-uppercase" style="font-size: 0.75rem; letter-spacing: 1px;">Last Name</small>
+                    <div class="fs-6 fw-bold text-white">{{ customer.customer_last_name }}</div>
+                </div>
+
+                <div class="col-12 my-1">
+                    <hr class="border-secondary opacity-25">
+                </div>
+
+                <div class="col-12">
+                    <small class="text-secondary text-uppercase" style="font-size: 0.75rem; letter-spacing: 1px;">Email Address</small>
+                    <div class="fs-6 fw-bold text-white text-break">{{ customer.customer_email }}</div>
+                </div>
+                
+                <div class="col-12 mt-3">
+                    <small class="text-secondary text-uppercase" style="font-size: 0.75rem; letter-spacing: 1px;">Mobile Number</small>
+                    <div class="fs-6 fw-bold text-white">{{ customer.customer_mobileno }}</div>
+                </div>
+            </div>
+        </div>
+      </div>
+
+      <div class="modal-footer border-0 justify-content-between p-3 px-4">
+        <button type="button" class="btn btn-outline-light btn-sm px-3" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger btn-sm px-4 fw-bold shadow" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+            <i class="bi bi-pencil-square me-1"></i> Edit Profile
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- edit profile modal -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background-color: rgb(24, 24, 24); color: white; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1);">
+
+      <form action="/customer_panel/customer_update_profile/" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="modal-header border-secondary">
+          <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Edit Profile</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body text-center pt-3">
+
+          <div class="img-area mx-auto mb-3 shadow-lg" style="height:110px; width:110px; border-radius:50%; overflow:hidden; border: .5px solid white; position: relative;">
+              <img src="{{ customer.customer_profile_pic.url }}" id="edit-modal-profile-pic" style="width:100%; height:100%; object-fit:cover;">
+          </div>
+
+          <label for="edit-input-file" class="btn btn-outline-light btn-sm mb-3" style="border-radius: 20px;">
+            <i class="bi bi-camera-fill me-1"></i> Change Photo
+          </label>
+          <input type="file" id="edit-input-file" name="customer_profile_pic" hidden accept="image/*">
+
+          <div class="text-start p-3 mx-2" style="background-color: rgba(255, 255, 255, 0.05); border-radius: 12px;">
+            <div class="row g-2">
+
+                <div class="col-6">
+                    <label class="small text-secondary text-uppercase mb-1" style="font-size: 0.7rem;">First Name</label>
+                    <input type="text" class="form-control bg-dark text-white border-secondary" name="customer_modal_first_name" value="{{ customer.customer_first_name }}" required>
+                </div>
+                <div class="col-6">
+                    <label class="small text-secondary text-uppercase mb-1" style="font-size: 0.7rem;">Last Name</label>
+                    <input type="text" class="form-control bg-dark text-white border-secondary" name="customer_modal_last_name" value="{{ customer.customer_last_name }}" required>
+                </div>
+
+                <div class="col-12">
+                    <label class="small text-secondary text-uppercase mb-1" style="font-size: 0.7rem;">Username</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-dark border-secondary text-secondary">@</span>
+                        <input type="text" class="form-control bg-dark text-white border-secondary" name="customer_modal_username" value="{{ customer.customer_username }}" required>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <label class="small text-secondary text-uppercase mb-1" style="font-size: 0.7rem;">Email Address</label>
+                    <input type="email" class="form-control bg-dark text-white border-secondary" name="customer_modal_email" value="{{ customer.customer_email }}" required>
+                </div>
+
+                <div class="col-12">
+                    <label class="small text-secondary text-uppercase mb-1" style="font-size: 0.7rem;">Mobile Number</label>
+                    <input type="text" class="form-control bg-dark text-white border-secondary" name="customer_modal_mobileno" value="{{ customer.customer_mobileno }}" required placeholder="Enter mobile number">
+                </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer border-0 justify-content-between p-3 px-4">
+          <button type="button" class="btn btn-outline-light btn-sm px-3" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-danger btn-sm px-4 fw-bold shadow">Save Changes</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- <buy premium modal -->
+<div class="modal fade" id="premiumModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-white border-secondary">
+            <div class="modal-header border-0">
+                <h5 class="modal-title"><i class="bi bi-star-fill text-warning me-2"></i>Premium Feature</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center pb-4">
+                <div class="mb-3">
+                    <i class="bi bi-lock-fill text-warning" style="font-size: 3rem;"></i>
+                </div>
+                <p>Watch History, Liked Videos, and Notifications are only available for Premium members.</p>
+                <p class="small text-secondary">Upgrade now to unlock your personalized collection!</p>
+            </div>
+            <div class="modal-footer border-0 justify-content-center">
+                <button type="button" class="btn btn-outline-light px-4" data-bs-dismiss="modal">Cancel</button>
+                <a href="{% url 'customer_subscriptions' %}" class="btn btn-warning px-4 fw-bold">Upgrade Now</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- // confirm clear notifications modal -->
+<div class="modal fade" id="confirmClearAllModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content text-white border-secondary" style = "background: #111010;">
+            <div class="modal-body text-center p-4">
+                <i class="bi bi-exclamation-triangle text-warning mb-3" style="font-size: 2.5rem;"></i>
+                <h5 class="mb-2">Clear All?</h5>
+                <p class="small text-secondary mb-4">This will permanently remove all your notifications.</p>
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-sm btn-outline-secondary w-100" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" id="executeClearAll" class="btn btn-sm btn-danger w-100">Clear All</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    // pws method to render mobile app
+  if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register("{% static 'serviceworker.js' %}").then(function(registration) {
+                console.log('ServiceWorker registration successful');
+            }, function(err) {
+                console.log('ServiceWorker registration failed: ', err);
+            });
+        });
+    }
+
+// function to trigger buy premium modal
+document.addEventListener("DOMContentLoaded", function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('premium_required') === 'true') {
+        var myModal = new bootstrap.Modal(document.getElementById('premiumModal'));
+        myModal.show();
+    }
+});
+
+// Unified notification(desktop and mobile) logic to clear and mark as read 
+
+// clear individual Notifications
+function deleteSingleNotification(notificationId, event) {
+    // 1. Prevent Link Navigation & Menu Closing
+    event.preventDefault();
+    event.stopPropagation();
+
+    // 2. Send Delete Request to Django
+    fetch("{% url 'delete_single_notification' %}", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({ id: notificationId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            
+            // 3. Find ALL instances of this notification (Desktop AND Mobile)
+            // We use the ID as a selector to find all elements with that ID
+            const items = document.querySelectorAll('#notification-row-' + notificationId);
+            
+            items.forEach(item => {
+                // Apply Animation
+                item.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                item.style.opacity = '0';
+                item.style.transform = 'translateX(20px)';
+                
+                // Remove from DOM after animation
+                setTimeout(() => item.remove(), 300);
+            });
+
+            // 4. Update Badge Count (Works for both versions)
+            const badges = document.querySelectorAll('#notification-badge, .notification-badge');
+            badges.forEach(badge => {
+                let count = parseInt(badge.innerText);
+                if (count > 1) {
+                    badge.innerText = count - 1;
+                } else {
+                    badge.style.display = 'none';
+                }
+            });
+            
+            // 5. Check if containers are empty to show "No new notifications"
+            setTimeout(() => {
+                const emptyContent = `
+                    <div style="text-align: center; padding: 40px 20px; color: #666;">
+                        <i class="bi bi-bell-slash" style="font-size: 3rem; margin-bottom: 10px; display: block;"></i>
+                        <div style="font-size: 0.9rem;">No new notifications</div>
+                    </div>`;
+
+                // Check Desktop Container
+                const desktopContainer = document.getElementById('notification-items-list');
+                if (desktopContainer && desktopContainer.children.length === 0) {
+                    desktopContainer.innerHTML = `<li class="p-3 text-center text-muted small">No new notifications</li>`;
+                }
+
+                // Check Mobile Container
+                const mobileContainer = document.querySelector('.notification-items-list-container');
+                if (mobileContainer && mobileContainer.querySelectorAll('.notification-item-wrapper').length === 0) {
+                    mobileContainer.innerHTML = emptyContent;
+                }
+            }, 350);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // 1. Select all shared elements
+    const triggers = document.querySelectorAll('.notification-trigger');
+    const badges = document.querySelectorAll('#notification-badge, .notification-badge');
+    const clearButtons = [document.getElementById('clear-all-btn'), document.getElementById('mobile-clear-notifications')];
+
+    // NEW: Elements for the Modal
+    const clearAllModal = new bootstrap.Modal(document.getElementById('confirmClearAllModal'));
+    const executeClearBtn = document.getElementById('executeClearAll');
+
+    // 2. "Mark as Read" Logic
+    triggers.forEach(trigger => {
+        trigger.addEventListener('shown.bs.dropdown', function() {
+            fetch("{% url 'mark_notifications_as_read' %}", {
+                method: 'POST',
+                headers: { 'X-CSRFToken': '{{ csrf_token }}' }
+            }).then(response => {
+                if (response.ok) {
+                    badges.forEach(badge => badge.style.display = 'none');
+                }
+            }).catch(err => console.log("Notification update failed", err));
+        });
+    });
+
+    // 3. "Clear All" Trigger - Opens the professional modal
+    clearButtons.forEach(btn => {
+        if (!btn) return;
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Replaces the old 'if (confirm(...))'
+            clearAllModal.show();
+        });
+    });
+
+    // 4. "Execute Clear" Logic - Attached to the button INSIDE the modal
+    if (executeClearBtn) {
+        executeClearBtn.addEventListener('click', function() {
+            // UI Feedback: Show spinner
+            this.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Clearing...';
+            this.disabled = true;
+
+            fetch("{% url 'clear_notifications' %}", {
+                method: 'POST',
+                headers: { 'X-CSRFToken': '{{ csrf_token }}' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Hide the Modal
+                    clearAllModal.hide();
+
+                    // Clear Desktop List
+                    const desktopList = document.getElementById('notification-items-list');
+                    if (desktopList) desktopList.innerHTML = '<li><a class="dropdown-item text-white small text-center py-3" href="#">No new notifications</a></li>';
+                    
+                    // Clear Mobile List
+                    const mobileContainer = document.querySelector('.notification-items-list-container');
+                    if (mobileContainer) {
+                        mobileContainer.innerHTML = `
+                            <div style="text-align: center; padding: 40px 20px; color: #666;">
+                                <i class="bi bi-bell-slash" style="font-size: 3rem; margin-bottom: 10px; display: block;"></i>
+                                <div>No new notifications</div>
+                            </div>`;
+                    }
+
+                    // Hide badges
+                    badges.forEach(badge => badge.style.display = 'none');
+                    
+                    // Close the Dropdown/Menu
+                    const inst = bootstrap.Dropdown.getInstance(document.querySelector('[data-bs-toggle="dropdown"]'));
+                    if (inst) inst.hide();
+
+                    const mobileDropdown = document.querySelector('#mobileNotificationDropdown .dropdown-menu');
+                    if (mobileDropdown) {
+                        mobileDropdown.classList.remove('show');
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("Connection error.");
+            })
+            .finally(() => {
+                // Reset button state
+                this.innerHTML = 'Clear All';
+                this.disabled = false;
+            });
+        });
+    }
+    
+    // ========================================
+    // MOBILE JAVASCRIPT
+    // ========================================
+    // Mobile Notification Dropdown Toggle
+    const notificationBtn = document.getElementById('mobile-notification-btn');
+    const notificationDropdown = document.getElementById('mobile-notification-dropdown');
+    
+    if (notificationBtn) {
+        notificationBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            notificationDropdown.classList.toggle('show');
+            // Close profile dropdown if open
+            document.getElementById('mobile-profile-dropdown').classList.remove('show');
+        });
+    }
+    
+    // Close mobile profile dropdown when any link inside it is clicked
+    const profileLinks = document.querySelectorAll('#mobile-profile-dropdown a');
+    profileLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            profileDropdown.classList.remove('show');
+        });
+});
+    // Profile Dropdown Toggle
+    const profileBtn = document.getElementById('mobile-profile-btn');
+    const profileDropdown = document.getElementById('mobile-profile-dropdown');
+    
+    if (profileBtn) {
+        profileBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            profileDropdown.classList.toggle('show');
+            // Close notification dropdown if open
+            notificationDropdown.classList.remove('show');
+        });
+    }
+    
+    // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            // 1. Logic for Mobile Notifications
+            const mobileNotifDropdown = document.querySelector('#mobileNotificationDropdown .dropdown-menu');
+            const mobileNotifBtn = document.querySelector('#mobileNotificationDropdown [data-bs-toggle="dropdown"]');
+            
+            if (mobileNotifDropdown && !mobileNotifDropdown.contains(e.target) && !mobileNotifBtn.contains(e.target)) {
+                mobileNotifDropdown.classList.remove('show');
+            }
+
+            // 2. Logic for Mobile Profile (The fix for your issue)
+            const profileDropdown = document.getElementById('mobile-profile-dropdown');
+            const profileBtn = document.getElementById('mobile-profile-btn');
+            
+            // If the click is NOT on the button and NOT inside the dropdown, close it
+            if (profileDropdown && profileDropdown.classList.contains('show')) {
+                if (!profileBtn.contains(e.target) && !profileDropdown.contains(e.target)) {
+                    profileDropdown.classList.remove('show');
+                }
+            }
+        });
+    
+    // More Menu Toggle (Bottom Sheet)
+    const moreNavBtn = document.getElementById('more-nav-btn');
+    const moreMenuOverlay = document.getElementById('more-menu-overlay');
+    const moreMenuSheet = document.getElementById('more-menu-sheet');
+    const moreMenuClose = document.getElementById('more-menu-close');
+    
+    function openMoreMenu() {
+        moreMenuOverlay.classList.add('show');
+        setTimeout(() => {
+            moreMenuSheet.classList.add('show');
+        }, 10);
+        document.body.style.overflow = 'hidden';
+    }
+    
+    function closeMoreMenu() {
+        moreMenuSheet.classList.remove('show');
+        setTimeout(() => {
+            moreMenuOverlay.classList.remove('show');
+        }, 300);
+        document.body.style.overflow = '';
+    }
+    
+    if (moreNavBtn) {
+        moreNavBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            openMoreMenu();
+        });
+    }
+    
+    if (moreMenuClose) {
+        moreMenuClose.addEventListener('click', closeMoreMenu);
+    }
+    
+    if (moreMenuOverlay) {
+        moreMenuOverlay.addEventListener('click', closeMoreMenu);
+    }
+    
+    // Active bottom nav item highlighting
+    const currentPath = window.location.pathname;
+    const bottomNavItems = document.querySelectorAll('.bottom-nav-item');
+    
+    bottomNavItems.forEach(item => {
+        const href = item.getAttribute('href');
+        if (href && href !== '#' && currentPath.includes(href)) {
+            // Remove active from all
+            bottomNavItems.forEach(i => i.classList.remove('active'));
+            // Add active to current
+            item.classList.add('active');
+        }
+    });
+    
+    // Edit profile image preview
+    const editInputFile = document.getElementById('edit-input-file');
+    const editModalProfilePic = document.getElementById('edit-modal-profile-pic');
+    
+    if (editInputFile) {
+        editInputFile.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    editModalProfilePic.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+    })
+
+//toggle sidebar for mobile
+function toggleMobileNav(isOpen) {
+    const sidebar = document.getElementById('mobile-sidebar');
+    const overlay = document.getElementById('sidebar-overlay-global');
+    
+    if (sidebar && overlay) {
+        if (isOpen) {
+            sidebar.style.transform = 'translateX(250px)'; // Smooth
+            overlay.style.display = 'block';
+        } else {
+            sidebar.style.transform = 'translateX(0)'; // Smooth
+            overlay.style.display = 'none';
+        }
+    }
+}
+
+// Add hover effects for the mobile links
+document.querySelectorAll('.m-side-link').forEach(link => {
+    link.onmouseover = () => { if(!link.classList.contains('text-danger')) link.style.backgroundColor = 'rgba(255,255,255,0.05)'; };
+    link.onmouseout = () => { link.style.backgroundColor = 'transparent'; };
+});
+
+    
+
+</script>
+<script src="{% static 'customer_panel/js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>
+
+  

@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<title>Movieflix Watch History Customer</title>
+</head>
+<body>
+<style>
+*{
+    margin:0;
+    padding:0;
+}
+
+.desktop-wrapper {
+    min-width: 1200px; /* Force desktop width */
+    overflow-x: hidden; /* Enable horizontal scroll on mobile */
+}
+body {
+    background-color: #0f0f0f;
+    color: #e0e0e0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+    body.modal-open .content-to-blur {
+    filter: blur(1px); 
+    transition: filter 0.1s ease;
+    pointer-events: none; 
+    
+    }
+.side-bar {
+  transition:all 0.3s ease;
+}
+.side-bar:hover {
+    transform: translateX(5px);
+} 
+.watched-videos {
+    transition:all 0.3s ease;
+}
+.watched-videos:hover{
+    transform: translateY(-8px);
+}
+/* Keep the modals sharp by ensuring they are not inside the blur div */
+    .modal {
+    background: rgba(0, 0, 0, 0.1); 
+    z-index: 1060; /* Higher than blurred content */
+   }
+
+    #notification-items-list {
+        max-height: 350px; /* Limits the height of the dropdown */
+        overflow-y: auto;  /* Enables vertical scrolling */
+        overflow-x: hidden; /* Prevents horizontal shaking */
+    }
+
+    /* Professional scrollbar for Dark Mode */
+    #notification-items-list::-webkit-scrollbar {
+        width: 5px;
+    }
+    #notification-items-list::-webkit-scrollbar-track {
+        background: #212529; 
+    }
+    #notification-items-list::-webkit-scrollbar-thumb {
+        background: #444; 
+        border-radius: 10px;
+    }
+    #notification-items-list::-webkit-scrollbar-thumb:hover {
+        background: #dc3545; /* Turns red when you hover over the scrollbar */
+    }
+
+        
+</style>
+
+<div class = "desktop-wrapper "><header>
+
+<nav class = " d-flex align-items-center justify-content-between ms-auto" style = "position:fixed;top:0;width:100%;z-index:1050;height:60px;background-color:black">
+    <h3 style = "color:red;padding-left:20px"><b>Movie flix</b></h3>
+    <div class = "d-flex">
+
+        <!--for notifications dropdown-->
+        {% if current_sub.plan_type == 'premium' %}
+        <div class="dropdown" id="notificationDropdown">
+            <button class="btn btn-dark position-relative me-2" type="button" data-bs-toggle="dropdown">
+                <i class="bi bi-bell"></i>
+                {% if unread_count > 0 %}
+                    <span id="notification-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        {{ unread_count }}
+                    </span>
+                {% endif %}
+            </button>
+            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end bg-dark text-white border-secondary" style="min-width: 400px;">
+                <li class="dropdown-header text-white border-bottom border-secondary d-flex justify-content-between align-items-center pb-2">
+                    <span>Notifications</span>
+                    <button id="clear-all-btn" class="btn btn-sm text-danger border-0 p-0" style="font-size: 0.75rem;">Clear All</button>
+                </li>
+
+                <div id="notification-items-list">
+                    {% for n in notifications %}
+                        <li>
+                            <a class="dropdown-item text-white small py-2 d-flex align-items-center" href="{{ n.redirect_url|default:'#' }}">
+                                {% if n.image %}
+                                    <img src="{{ n.image.url }}" alt="thumb" class="rounded me-2" style="width: 80px; height: 60px; object-fit: cover;">
+                                {% else %}
+                                    <div class="bg-secondary rounded me-2 d-flex align-items-center justify-content-center" style="width: 45px; height: 60px;">
+                                        <i class="bi bi-film"></i>
+                                    </div>
+                                {% endif %}
+
+                                <div style="white-space: normal;">
+                                    <b class="d-block">{{ n.title }}</b>
+                                    <span class="text-secondary" style="font-size: 0.8rem;">{{ n.message }}</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider border-secondary m-0"></li>
+                    {% empty %}
+                        <li><a class="dropdown-item text-white small text-center py-3" href="#">No new notifications</a></li>
+                    {% endfor %}
+                </div>
+            </ul>
+        </div>
+        {% else %}
+        <a class="btn btn-dark position-relative me-2" type="button" 
+         href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#premiumModal">
+           <i class="bi bi-bell"></i>
+        </a>
+        {% endif %}
+        <!---->
+
+    {% if customer.customer_profile_pic %}
+        <img src="{{ customer.customer_profile_pic.url }}" 
+             style="width:40px; height:40px; border-radius:50%; object-fit:cover;" 
+             class="me-2">
+    {% else %}
+        <img src="https://www.citypng.com/public/uploads/preview/hd-photo-camera-black-icon-png-11637125301j0pnozhh0u.png" 
+             style="width:40px; height:40px; border-radius:50%;" 
+             class="me-2">
+    {% endif %}
+
+     <div  class = "d-flex align-items-center" style = "width:100px;background-color:black;color:white;height:38px;border-radius:5px;padding:5px;
+        width: 100px;
+        white-space: nowrap;      /* Forces text to stay on one line */
+        overflow: hidden;         /* Hides the text that goes past 100px */
+        text-overflow: ellipsis;  /* Adds the '...' at the end */
+        display: inline-block;    /* Ensures width is respected */
+        vertical-align: middle;   /* Keeps it aligned with the icon */
+        text-align: right;">
+            <span>{{ customer.customer_username}}</span>
+          
+        </div>
+
+      <div class="dropdown" style = "position:relative;right:5px;" >
+          <button  type="button"  style = "width:auto;background-color:black;color:white;border:none"class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
+          
+          </button>
+        <ul class="dropdown-menu dropdown-menu-dark" >
+            <li><a class="dropdown-item" href="#"><i class="bi bi-person-fill "></i>
+            <span>{{ customer.customer_username }}</span></a></li>
+            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#profileModal"><i class="bi bi-person-circle me-1"></i>View Profile</a></li>
+            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#editProfileModal"><i class="bi bi-pencil-square me-1"></i>Edit Profile</a></li>
+            <li><a class="dropdown-item" href="/customer_panel/customer_profile_settings_page/"><i class="bi bi-gear-fill me-1"></i>Profile Settings</a></li>
+            <li><a class="dropdown-item" href="/customer_panel/customer_login_page/"><i class="bi bi-box-arrow-right me-1"></i>Logout</a></li>
+        </ul>
+      </div>
+
+      </div>
+</nav></header>
+
+<main class="d-flex ">
+    <div class = "d-flex " style = "min-height:644px;" >
+        <div class = "  d-flex flex-column "  style = "position:fixed;top:60px;z-index:1050;height:636px;width:220px;flex-shrink: 0;background-color:black;padding-top:20px">
+            <a class = "side-bar btn bg-dark mb-3 " href = "/customer_panel/customer_dashboard_page/" style="text-align:start;text-decoration:none;color:white;padding:5px 15px;margin: 0px 8px;"><i class="bi bi-sliders me-2"></i>Dashboard</a>
+            <a class = "side-bar btn bg-dark mb-3" href = "/customer_panel/customer_movie_page/" style="text-align:start;text-decoration:none;color:white;padding:5px 15px;margin: 0px 8px;"><i class="bi bi-film me-2"></i>Movies</a>
+            <a class = "side-bar btn bg-dark mb-3" href = "/customer_panel/customer_web_series_page/" style="text-align:start;text-decoration:none;color:white;padding:5px 15px;margin: 0px 8px;"><i class="bi bi-tv me-2"></i>Web Series</a>
+            <div class="mb-3">
+                <!-- Main item - no longer collapsible (just a label) -->
+                <a class="side-bar btn bg-dark d-flex justify-content-between align-items-center" 
+                href="#" 
+                style="text-decoration:none;color:white;padding:5px 15px;margin: 0px 8px;">
+                    <span><i class="bi bi-activity me-2"></i>My Activity</span>
+                    <i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                
+                <!-- Submenu - always visible (removed .collapse class and added .show) -->
+                <div id="myActivitySubmenu" class="show no-arrow" style="padding-left: 20px;">
+                    {% if current_sub.plan_type == 'premium' %}
+                    <a class="side-bar btn d-block text-white mt-2 py-2" 
+                    href="/customer_panel/customer_watch_history_page/" 
+                    style="text-align:start;text-decoration:none;background-color:red">
+                        <i class="bi bi-clock-history me-1"></i> Watch History
+                    </a>
+                    {% else %}
+                    <a class="side-bar btn d-block text-white mt-2 py-2" 
+                     href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#premiumModal"
+                    style="text-align:start;text-decoration:none;background-color:red">
+                        <i class="bi bi-file-lock me-1"></i> Watch History
+                    </a>
+                    {% endif %}
+
+                    {% if current_sub.plan_type == 'premium' %}
+                    <a class="side-bar btn d-block text-white mt-1 py-2" 
+                    href="/customer_panel/customer_liked_videos_page/" 
+                    style="text-align:start;text-decoration:none;">
+                        <i class="bi bi-hand-thumbs-up-fill me-1"></i> Liked Videos
+                    </a>
+                    {% else %}
+                    <a class="side-bar btn d-block text-white mt-1 py-2" 
+                     href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#premiumModal"
+                    style="text-align:start;text-decoration:none;">
+                        <i class="bi bi-file-lock me-1"></i> Liked Videos
+                    </a>
+                    {% endif %}
+
+                    <a class="side-bar btn d-block text-white mt-1 py-2" 
+                    href="/customer_panel/customer_subscriptions/"
+                    style="text-align:start;text-decoration:none;">
+                        <i class="bi bi-credit-card-2-back-fill me-1"></i> Subscription
+                    </a>
+                </div>
+            </div>
+
+            <a class = "side-bar btn bg-dark mb-3" href = "/customer_panel/customer_profile_settings_page/" style="text-align:start;text-decoration:none;color:white;padding:5px 15px;margin: 0px 8px;"><i class="bi bi-gear me-2"></i>Profile Settings</a>
+            <a class = "side-bar btn bg-dark mb-2 mt-auto" href = "/customer_panel/customer_login_page/" style="text-align:start;text-decoration:none;color:white;padding:5px 15px;margin: 0px 8px;"><i class="bi bi-box-arrow-right me-2"></i>Logout</a>
+       
+            
+           
+        </div>
+        <div > </div>
+
+    </div>     
+
+    <div class = "d-flex flex-column " style = "margin-left:220px;margin-top:60px;width:100vw;min-height:625px;background-color:rgb(20, 20, 20)">
+        <div class = "d-flex flex-column " style = "padding:20px 40px;">
+            
+                <div class = "d-flex align-items-center">
+                    <div><h2 class="text-white mb-4 pt-3 me-4"><b>Your Watch History</b></h2></div>
+                    <hr>
+                    <div><button class="btn btn-outline-light btn-sm"   id="clear-history-btn">
+                        <i class="bi bi-trash"></i> Clear Watch History
+                    </button></div>
+                </div>
+        
+        <div class="row">
+    {% for item in history_items %}
+    <div class="col-md-3 mb-4" id="history-item-{{ item.id }}">
+        <div class="watched-videos card bg-dark border-secondary text-white h-100 position-relative">
+            
+            {% if item.movie %}
+            
+                <img src="{{ item.movie.movie_banner.url }}" class="card-img-top" style="height: 160px; object-fit: cover;">
+                <span class="badge bg-danger position-absolute top-0 end-1 m-2">Movie</span>
+
+                <div class="card-body d-flex flex-column justify-content-between" style="min-height: 130px;">
+                    
+                     <a href="{% url 'customer_movie_player_page' item.movie.id %}" 
+                         class="text-decoration-none">
+
+                        <h5 class="text-white">{{ item.movie.movie_title }}</h5>
+                        <p class="text-secondary small">Directed by {{ item.movie.movie_director }}</p>
+
+                    </a>
+                    
+                </div>
+
+            {% elif item.web_series %}
+                <img src="{{ item.episode.episode_banner.url }}" class="card-img-top" style="height: 160px; object-fit: cover;">
+                <span class="badge bg-success position-absolute top-0 end-1 m-2">Series</span>
+
+                <div class="card-body d-flex flex-column justify-content-between" style="min-height: 130px;">
+                    <div>
+                        <a href="{% url 'customer_series_player_page' item.web_series.id %}?play={{ item.episode.id }}" 
+                            class="text-decoration-none">
+                                
+            
+                        <p class=" mb-1 text-white text-truncate">{{ item.web_series.series_title }}</p>
+                        <p class="text-secondary small">Directed by {{ item.web_series.series_director }}</p>
+                        <h6 class="mb-1 text-white text-truncate">{{ item.episode.episode_title }}</h6>
+                        <p class="text-warning small mb-0">
+                            <i class="bi bi-layers"></i> {{ item.episode.season.season_name }}
+                        </p>
+
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+            
+            <!-- individual item delete button -->
+            <button class="btn btn-sm text-secondary position-absolute top-0 end-0 m-1" 
+                onclick="deleteHistoryItem('{{ item.id }}')"
+                style="z-index: 10; background: rgba(0,0,0,0.5); border-radius: 50%;">
+                <i class="bi bi-x-lg"></i>
+            </button>
+
+            <div class="card-footer border-secondary py-2 text-center">
+                <small class="text-secondary-80" style="font-size: 0.75rem;">
+                    <i class="bi bi-clock-history"></i> Watched {{ item.watched_at|timesince }} ago
+                </small>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+        <div class="col-12 text-center py-5">
+            <p class="text-white-50">No history found.</p>
+        </div>
+    {% endfor %}
+</div>
+
+        
+
+
+    </div>
+</main>
+
+<footer>
+
+
+    <div class = "d-flex justify-content-center align-items-center text-white" style = "background-color:black;height:50px;">
+        <div style = "position:relative;left:80px"> @copyrightramanasoft</div>
+        <div class = "d-flex justify-content-center align-items-center" style = "position:relative;left:580px;">
+            <a href = "#"><img src = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Facebook_logo_%28square%29.png/500px-Facebook_logo_%28square%29.png" 
+             class = "me-3" style = "width:20px;height:20px;"></a>
+            <a href = "#"><img src = "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/2044px-WhatsApp.svg.png" 
+            class = "me-3" style = "width:20px;height:20px;"></a>
+            <a href = "#"><img src = "https://toppng.com/uploads/preview/instagram-png-logo-11545512103yiiajkgr2i.png" 
+            class = "me-2" style = "width:20px;height:20px;border-radius:5px"></a>
+            <a href = "#"><img src = "https://logos-world.net/wp-content/uploads/2020/04/Twitter-Emblem.png" 
+             style = "width:35px;height:20px"></a>
+        </div>
+    </div>
+
+
+</footer>
+</div>
+
+
+<!-- view profile modal -->
+<div class="modal fade" id="profileModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background-color: rgb(24, 24, 24); color: white; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1);">
+      
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title" id="profileModalLabel">
+            <i class="bi bi-person-badge me-2"></i>Profile Details
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body text-center pt-4">
+        <div class="img-area mx-auto mb-3 shadow-lg" style="height:110px; width:110px; border-radius:50%; overflow:hidden; border: .5px solid white;">
+            <img src="{{ customer.customer_profile_pic.url }}" style="width:100%; height:100%; object-fit:cover;">
+        </div>
+        
+        <h4 class="fw-bold mb-4">{{ customer.customer_username }}</h4>
+        
+        <div class="text-start p-4 mx-2" style="background-color: rgba(255, 255, 255, 0.05); border-radius: 12px;">
+            <div class="row g-3">
+                <div class="col-6">
+                    <small class="text-secondary text-uppercase" style="font-size: 0.75rem; letter-spacing: 1px;">First Name</small>
+                    <div class="fs-6 fw-bold text-white">{{ customer.customer_first_name }}</div>
+                </div>
+                <div class="col-6">
+                    <small class="text-secondary text-uppercase" style="font-size: 0.75rem; letter-spacing: 1px;">Last Name</small>
+                    <div class="fs-6 fw-bold text-white">{{ customer.customer_last_name }}</div>
+                </div>
+
+                <div class="col-12 my-1">
+                    <hr class="border-secondary opacity-25">
+                </div>
+
+                <div class="col-12">
+                    <small class="text-secondary text-uppercase" style="font-size: 0.75rem; letter-spacing: 1px;">Email Address</small>
+                    <div class="fs-6 fw-bold text-white text-break">{{ customer.customer_email }}</div>
+                </div>
+                
+                <div class="col-12 mt-3">
+                    <small class="text-secondary text-uppercase" style="font-size: 0.75rem; letter-spacing: 1px;">Mobile Number</small>
+                    <div class="fs-6 fw-bold text-white">{{ customer.customer_mobileno }}</div>
+                </div>
+            </div>
+        </div>
+      </div>
+
+      <div class="modal-footer border-0 justify-content-between p-3 px-4">
+        <button type="button" class="btn btn-outline-light btn-sm px-3" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger btn-sm px-4 fw-bold shadow" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+            <i class="bi bi-pencil-square me-1"></i> Edit Profile
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- edit profile modal -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background-color: rgb(24, 24, 24); color: white; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1);">
+
+      <form action="/customer_panel/customer_update_profile/" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="modal-header border-secondary">
+          <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Edit Profile</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body text-center pt-3">
+
+          <div class="img-area mx-auto mb-3 shadow-lg" style="height:110px; width:110px; border-radius:50%; overflow:hidden; border: .5px solid white; position: relative;">
+              <img src="{{ customer.customer_profile_pic.url }}" id="edit-modal-profile-pic" style="width:100%; height:100%; object-fit:cover;">
+          </div>
+
+          <label for="edit-input-file" class="btn btn-outline-light btn-sm mb-3" style="border-radius: 20px;">
+            <i class="bi bi-camera-fill me-1"></i> Change Photo
+          </label>
+          <input type="file" id="edit-input-file" name="customer_profile_pic" hidden accept="image/*">
+
+          <div class="text-start p-3 mx-2" style="background-color: rgba(255, 255, 255, 0.05); border-radius: 12px;">
+            <div class="row g-2">
+
+                <div class="col-6">
+                    <label class="small text-secondary text-uppercase mb-1" style="font-size: 0.7rem;">First Name</label>
+                    <input type="text" class="form-control bg-dark text-white border-secondary" name="customer_modal_first_name" value="{{ customer.customer_first_name }}" required>
+                </div>
+                <div class="col-6">
+                    <label class="small text-secondary text-uppercase mb-1" style="font-size: 0.7rem;">Last Name</label>
+                    <input type="text" class="form-control bg-dark text-white border-secondary" name="customer_modal_last_name" value="{{ customer.customer_last_name }}" required>
+                </div>
+
+                <div class="col-12">
+                    <label class="small text-secondary text-uppercase mb-1" style="font-size: 0.7rem;">Username</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-dark border-secondary text-secondary">@</span>
+                        <input type="text" class="form-control bg-dark text-white border-secondary" name="customer_modal_username" value="{{ customer.customer_username }}" required>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <label class="small text-secondary text-uppercase mb-1" style="font-size: 0.7rem;">Email Address</label>
+                    <input type="email" class="form-control bg-dark text-white border-secondary" name="customer_modal_email" value="{{ customer.customer_email }}" required>
+                </div>
+
+                <div class="col-12">
+                    <label class="small text-secondary text-uppercase mb-1" style="font-size: 0.7rem;">Mobile Number</label>
+                    <input type="text" class="form-control bg-dark text-white border-secondary" name="customer_modal_mobileno" value="{{ customer.customer_mobileno }}" required placeholder="Enter mobile number">
+                </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer border-0 justify-content-between p-3 px-4">
+          <button type="button" class="btn btn-outline-light btn-sm px-3" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-danger btn-sm px-4 fw-bold shadow">Save Changes</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+<!--confirm clear history modal-->
+<div class="modal fade" id="clearHistoryModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark text-white border-secondary">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title">Clear Watch History</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete your entire watch history? This action cannot be undone.
+      </div>
+      <div class="modal-footer border-secondary">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" id="confirmClearBtn" class="btn btn-danger">Yes, Clear Everything</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--confirm clear individual item-->
+<div class="modal fade" id="confirmDeleteHistoryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-white border-secondary">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title">Remove from History</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to remove this item from your watch history?
+            </div>
+            <div class="modal-footer border-secondary">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="executeDeleteBtn">Remove</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <buy premium modal -->
+<div class="modal fade" id="premiumModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-white border-secondary">
+            <div class="modal-header border-0">
+                <h5 class="modal-title"><i class="bi bi-star-fill text-warning me-2"></i>Premium Feature</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center pb-4">
+                <div class="mb-3">
+                    <i class="bi bi-lock-fill text-warning" style="font-size: 3rem;"></i>
+                </div>
+                <p>Watch History, Liked Videos, and Notifications are only available for Premium members.</p>
+                <p class="small text-secondary">Upgrade now to unlock your personalized collection!</p>
+            </div>
+            <div class="modal-footer border-0 justify-content-center">
+                <button type="button" class="btn btn-outline-light px-4" data-bs-dismiss="modal">Cancel</button>
+                <a href="{% url 'customer_subscriptions' %}" class="btn btn-warning px-4 fw-bold">Upgrade Now</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- // confirm clear notifications modal -->
+<div class="modal fade" id="confirmClearAllModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content text-white border-secondary" style = "background: #111010;">
+            <div class="modal-body text-center p-4">
+                <i class="bi bi-exclamation-triangle text-warning mb-3" style="font-size: 2.5rem;"></i>
+                <h5 class="mb-2">Clear All?</h5>
+                <p class="small text-secondary mb-4">This will permanently remove all your notifications.</p>
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-sm btn-outline-secondary w-100" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" id="executeClearAll" class="btn btn-sm btn-danger w-100">Clear All</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('edit-input-file').onchange = function() {
+        let file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                let base64Image = e.target.result;
+            
+                //  Update the preview image in the modal
+                document.getElementById('edit-modal-profile-pic').src = base64Image;
+            };
+            
+            reader.readAsDataURL(file);
+        }
+    }
+
+// function to trigger buy premium modal
+document.addEventListener("DOMContentLoaded", function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('premium_required') === 'true') {
+        var myModal = new bootstrap.Modal(document.getElementById('premiumModal'));
+        myModal.show();
+    }
+});
+
+// to clear specific watch history item
+// 1. Variable to temporarily hold the ID of the item we want to delete
+let historyItemIdToDelete = null;
+
+// 2. This function is called by the "X" button on your cards
+function deleteHistoryItem(historyId) {
+    // Store the ID so the modal knows what to delete
+    historyItemIdToDelete = historyId;
+    
+    // Trigger the Bootstrap Modal
+    const deleteModal = new bootstrap.Modal(document.getElementById('confirmDeleteHistoryModal'));
+    deleteModal.show();
+}
+
+// 3. This listener handles the "Remove" button click INSIDE the modal
+document.getElementById('executeDeleteBtn').addEventListener('click', function() {
+    if (!historyItemIdToDelete) return;
+
+    const historyId = historyItemIdToDelete;
+    const btn = this; // The modal button
+
+    // Visual feedback: show loading spinner
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Removing...';
+    btn.disabled = true;
+
+    // Use the exact URL from your original code but ensured trailing slash
+    fetch(`/customer_panel/customer_delete_history_item/${historyId}/`, {
+        method: 'POST', // Changed to POST for better Django compatibility
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => {
+        // If the server returns HTML (like a 404 or 500 page), this catches it 
+        // before the "Unexpected token <" error happens
+        if (!response.ok) throw new Error('Network response was not ok');
+        return response.json();
+    })
+    .then(data => {
+        if (data.status === 'success') {
+            // Hide the modal
+            const modalEl = document.getElementById('confirmDeleteHistoryModal');
+            bootstrap.Modal.getInstance(modalEl).hide();
+
+            // Remove from screen with animation
+            const element = document.getElementById(`history-item-${historyId}`);
+            if (element) {
+                element.style.transition = "all 0.4s ease";
+                element.style.opacity = "0";
+                element.style.transform = "scale(0.9)";
+                
+                setTimeout(() => {
+                    element.remove();
+                    // If history is now empty, reload to show "No history found"
+                    const remainingItems = document.querySelectorAll('[id^="history-item-"]');
+                    if (remainingItems.length === 0) {
+                        location.reload();
+                    }
+                }, 400);
+            }
+        } else {
+            alert("Error: " + (data.message || "Failed to delete"));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert("Server error: Ensure the URL /customer_panel/customer_delete_history_item/" + historyId + "/ is correct and accepts POST requests.");
+    })
+    .finally(() => {
+        // Reset modal button state
+        btn.innerHTML = 'Remove';
+        btn.disabled = false;
+        historyItemIdToDelete = null;
+    });
+});
+
+// to clear all watch History
+const openModalBtn = document.getElementById('clear-history-btn');
+// 2. The "Yes" button inside the new Modal
+const confirmClearBtn = document.getElementById('confirmClearBtn');
+
+if (openModalBtn) {
+    openModalBtn.addEventListener('click', function() {
+        // Manually trigger the Bootstrap Modal
+        const myModal = new bootstrap.Modal(document.getElementById('clearHistoryModal'));
+        myModal.show();
+    });
+}
+
+if (confirmClearBtn) {
+    confirmClearBtn.addEventListener('click', function() {
+        // Perform the actual database deletion
+        fetch("{% url 'customer_clear_history' %}", {
+            method: 'POST',
+            headers: { 
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.status === 'success') {
+                location.reload(); // Refresh to show empty history
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+}
+
+// for notification dropdown
+document.addEventListener('DOMContentLoaded', function() {
+    const csrftoken = '{{ csrf_token }}';
+    const dropdownEl = document.getElementById('notificationDropdown');
+    const badge = document.getElementById('notification-badge');
+    const clearBtn = document.getElementById('clear-all-btn');
+    const itemsList = document.getElementById('notification-items-list');
+
+    if(dropdownEl) {
+        dropdownEl.addEventListener('show.bs.dropdown', function () {
+            fetch("{% url 'mark_notifications_as_read' %}", {
+                method: 'POST',
+                headers: { 'X-CSRFToken': csrftoken }
+            }).then(() => {
+                if (badge) badge.style.display = 'none';
+            });
+        });
+    }
+
+    if(clearBtn) {
+        clearBtn.addEventListener('click', function(e) {
+            e.preventDefault(); e.stopPropagation();
+            if (confirm("Delete all notifications?")) {
+                fetch("{% url 'clear_notifications' %}", {
+                    method: 'POST',
+                    headers: { 'X-CSRFToken': csrftoken }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        itemsList.innerHTML = '<li><a class="dropdown-item text-white small text-center py-3" href="#">No new notifications</a></li>';
+                        if (badge) badge.style.display = 'none';
+                    }
+                });
+            }
+        });
+    }
+});
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+  

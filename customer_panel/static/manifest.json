@@ -1,0 +1,30 @@
+{
+  "short_name": "MovieFlix",
+  "name": "MovieFlix OTT Platform",
+  "description": "The ultimate platform for streaming your favorite movies and shows.",
+  "icons": [
+    {
+      "src": "/static/images/logo-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/static/images/logo-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/static/images/screenshot1.png",
+      "type": "image/png",
+      "sizes": "1080x1920",
+      "form_factor": "narrow"
+    }
+  ],
+  "start_url": "/customer_panel/customer_login_page/",
+  "background_color": "#000000",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#e50914"
+}

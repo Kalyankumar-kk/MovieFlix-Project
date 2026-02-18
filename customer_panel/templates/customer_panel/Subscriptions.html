@@ -1,0 +1,349 @@
+{% extends 'customer_panel/Internship1-janOSUB.html' %} 
+{% block content %}
+<style>
+    /* Professional Hover & Active styling */
+    .plan-card-basic:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 10px 30px rgba(77, 74, 74, 0.5) !important;
+        
+    }
+    .active-plan-border {
+        border-color: #0d6efd !important;
+        box-shadow: 0 0 15px rgba(13, 110, 253, 0.2) !important;
+    }
+    .plan-btn:hover {
+        background-color: white !important;
+        color: black !important;
+    }
+        /* Styles specifically for the Premium variant border */
+    .border-warning-subtle {
+        border-color: rgba(238, 201, 79, 0.753) !important;
+    }
+    
+    /* Hover effect specific to Premium */
+    .plan-card-premium:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 10px 30px rgba(238, 188, 39, 0.2) !important;
+    }
+
+    /* Keep the button looking sharp on hover */
+    .btn-outline-warning:hover {
+        color: #000 !important;
+    }
+
+</style>
+
+<div class="container-fluid py-5 text-white">
+    
+<div class="row justify-content-center mb-5">
+    <div class="col-md-8">
+        <div class="card  border-secondary text-center p-4" style = "background: rgba(0,0,0,0.1);border-radius:20px;">
+            <h4 class="text-info mb-2">Your Subscription Status</h4>
+            {% if current_sub %}
+                <p class="mb-1 text-white">Current Plan: 
+                    <span class="shadow-primary badge {% if current_sub.plan_type == 'premium' %}bg-primary{% else %}bg-secondary{% endif %} text-uppercase">
+                        {{ current_sub.plan_type }}
+                    </span>
+                </p>
+                <p class="mb-0 text-white">Time Remaining: 
+                    <span class="fw-bold text-white" id="live-countdown">
+                        Calculating...
+                    </span>
+                    <br>
+                    <small>(Expires: {{ current_sub.expiry_date|date:"d M Y, h:i A" }})</small>
+
+                </p>
+                <!-- <button type="button" class="btn btn-danger btn-sm mt-2" data-bs-toggle="modal" data-bs-target="#cancelModal">Cancel Subscription</button> -->
+
+            {% else %}
+                <p class="text-secondary">You do not have an active subscription. Choose a plan below to start watching!</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- --------------------------------------------------------------------------------- -->
+<div class="container-fluid py-0 text-white">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold">Choose Your Plan</h2>
+        <p class="text-secondary">Unlock the world of entertainment with our flexible plans.</p>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+        
+    <div class="col-md-3">
+    <div class="card h-100 bg-dark text-white shadow-lg position-relative plan-card-basic {% if current_sub.plan_type == 'basic' and current_sub.duration_months == 1 %}active-plan-border{% else %}border-secondary-subtle{% endif %}" 
+         style="border-radius: 16px; transition: all 0.3s ease; border-width: 1.5px; background: linear-gradient(145deg, #1a1a1a, #0d0d0d);">
+        
+        {% if current_sub.plan_type == 'basic' and current_sub.duration_months == 1 %}
+            <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-primary shadow" 
+                  style="z-index: 2; padding: 8px 16px; font-size: 0.7rem; letter-spacing: 1px;">ACTIVE PLAN</span>
+        {% endif %}
+
+        <div class="card-header text-center border-0 pt-4">
+            <h4 class="mb-1 fw-bold" style="letter-spacing: 0.5px;">Basic</h4>
+            <span class="badge bg-secondary-subtle text-dark" style="font-size: 0.75rem;">1 Month</span>
+        </div>
+
+        <div class="card-body text-center d-flex flex-column">
+            <div class="mb-4 mt-2">
+                <h1 class="card-title pricing-card-title fw-bold mb-0">₹99</h1>
+                <small class="text-secondary fw-light">per month</small>
+            </div>
+
+            <ul class="list-unstyled mt-2 mb-4 text-start mx-auto" style="width: 85%; font-size: 0.9rem;">
+                <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i>Unlimited Movies</li>
+                <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i>Unlimited Webseries</li>
+                <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i>Ad-Free Experience</li>
+                <li class="mb-3 text-secondary" style="opacity: 0.6;"><i class="bi bi-x-circle me-2"></i>Watch History</li>
+                <li class="mb-3 text-secondary" style="opacity: 0.6;"><i class="bi bi-x-circle me-2"></i>Liked Videos</li>
+                <li class="mb-3 text-secondary" style="opacity: 0.6;"><i class="bi bi-x-circle me-2"></i>Notifications</li>
+            </ul>
+
+            <div class="mt-auto pt-3">
+                {% if current_sub and current_sub.plan_type == 'basic' and current_sub.duration_months == 1 %}
+                    <button class="btn btn-primary w-100 py-2 fw-bold disabled" style="border-radius: 10px; opacity: 0.8;">Current Plan</button>
+                {% else %}
+                    <button type="button" 
+                            class="btn btn-outline-light w-100 py-2 fw-bold plan-btn"
+                            style="border-radius: 10px; transition: all 0.3s ease;"
+                            data-display-name="Basic (1 Month)"
+                            data-plan-url="{% url 'customer_process_subscriptions' 'basic' 1 %}"
+                            onclick="showConfirmModal(this)">
+                        {% if current_sub %}Switch Plan{% else %}Get Started{% endif %}
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="col-md-3">
+    <div class="card h-100 bg-dark text-white shadow-lg position-relative plan-card-basic {% if current_sub.plan_type == 'basic' and current_sub.duration_months == 3 %}active-plan-border{% else %}border-secondary-subtle{% endif %}" 
+         style="border-radius: 16px; transition: all 0.3s ease; border-width: 1.5px; background: linear-gradient(145deg, #1a1a1a, #0d0d0d);">
+        
+        {% if current_sub.plan_type == 'basic' and current_sub.duration_months == 3 %}
+            <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-primary shadow" 
+                  style="z-index: 2; padding: 8px 16px; font-size: 0.7rem; letter-spacing: 1px;">YOUR ACTIVE PLAN</span>
+        {% else %}
+            <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-secondary shadow" 
+                  style="z-index: 2; padding: 6px 14px; font-size: 0.65rem; letter-spacing: 1px;">SAVER</span>
+        {% endif %}
+
+        <div class="card-header text-center border-0 pt-4">
+            <h4 class="mb-1 fw-bold" style="letter-spacing: 0.5px;">Basic</h4>
+            <span class="badge bg-secondary-subtle text-dark" style="font-size: 0.75rem;">3 Months</span>
+        </div>
+
+        <div class="card-body text-center d-flex flex-column">
+            <div class="mb-4 mt-2">
+                <h1 class="card-title pricing-card-title fw-bold mb-0">₹249</h1>
+                <small class="text-secondary fw-light">for 3 months</small>
+            </div>
+
+            <ul class="list-unstyled mt-2 mb-4 text-start mx-auto" style="width: 85%; font-size: 0.9rem;">
+                <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i>Unlimited Movies</li>
+                <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i>Unlimited Webseries</li>
+                <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i>Ad-Free Experience</li>
+                <li class="mb-3 text-secondary" style="opacity: 0.6;"><i class="bi bi-x-circle me-2"></i>Watch History</li>
+                <li class="mb-3 text-secondary" style="opacity: 0.6;"><i class="bi bi-x-circle me-2"></i>Liked Videos</li>
+                <li class="mb-3 text-secondary" style="opacity: 0.6;"><i class="bi bi-x-circle me-2"></i>Notifications</li>
+            </ul>
+
+            <div class="mt-auto pt-3">
+                {% if current_sub and current_sub.plan_type == 'basic' and current_sub.duration_months == 3 %}
+                    <button class="btn btn-primary w-100 py-2 fw-bold disabled" style="border-radius: 10px; opacity: 0.8;">Current Plan</button>
+                {% else %}
+                    <button type="button" 
+                            class="btn btn-outline-light w-100 py-2 fw-bold plan-btn"
+                            style="border-radius: 10px; transition: all 0.3s ease;"
+                            data-display-name="Basic (3 Months)"
+                            data-plan-url="{% url 'customer_process_subscriptions' 'basic' 3 %}"
+                            onclick="showConfirmModal(this)">
+                        {% if current_sub %}Switch Plan{% else %}Get Started{% endif %}
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div class="col-md-3">
+    <div class="card h-100 bg-dark text-white shadow-lg position-relative plan-card-premium {% if current_sub.plan_type == 'premium' and current_sub.duration_months == 1 %}active-plan-border{% else %}border-warning-subtle{% endif %}" 
+         style="border-radius: 16px; transition: all 0.3s ease; border-width: 1.5px; background: linear-gradient(145deg, #1e1a0a, #0d0d0d);">
+        
+        {% if current_sub.plan_type == 'premium' and current_sub.duration_months == 1 %}
+            <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-primary shadow" 
+                  style="z-index: 2; padding: 8px 16px; font-size: 0.7rem; letter-spacing: 1px;">YOUR ACTIVE PLAN</span>
+        {% endif %}
+
+        <div class="card-header text-center border-0 pt-4">
+            <h4 class="mb-1 fw-bold text-warning" style="letter-spacing: 0.5px;">Premium</h4>
+            <span class="badge bg-warning text-dark" style="font-size: 0.75rem; opacity: 0.9;">1 Month</span>
+        </div>
+
+        <div class="card-body text-center d-flex flex-column">
+            <div class="mb-4 mt-2">
+                <h1 class="card-title pricing-card-title fw-bold mb-0 text-warning">₹199</h1>
+                <small class="text-secondary fw-light">per month</small>
+            </div>
+
+            <ul class="list-unstyled mt-2 mb-4 text-start mx-auto" style="width: 85%; font-size: 0.9rem;">
+                <li class="mb-3"><i class="bi bi-check-circle-fill text-warning me-2"></i>Unlimited Movies</li>
+                <li class="mb-3"><i class="bi bi-check-circle-fill text-warning me-2"></i>Unlimited Webseries</li>
+                <li class="mb-3"><i class="bi bi-check-circle-fill text-warning me-2"></i>Ad-Free Experience</li>
+                <li class="mb-3"><i class="bi bi-check-circle-fill text-warning me-2"></i>Watch History</li>
+                <li class="mb-3"><i class="bi bi-check-circle-fill text-warning me-2"></i>Liked Videos</li>
+                <li class="mb-3"><i class="bi bi-check-circle-fill text-warning me-2"></i>Notifications</li>
+            </ul>
+
+            <div class="mt-auto pt-3">
+                {% if current_sub and current_sub.plan_type == 'premium' and current_sub.duration_months == 1 %}
+                    <button class="btn btn-primary w-100 py-2 fw-bold disabled" style="border-radius: 10px; opacity: 0.8;">Current Plan</button>
+                {% else %}
+                    <button type="button" 
+                            class="btn btn-outline-warning w-100 py-2 fw-bold plan-btn"
+                            style="border-radius: 10px; transition: all 0.3s ease;"
+                            data-display-name="Premium (1 Month)"
+                            data-plan-url="{% url 'customer_process_subscriptions' 'premium' 1 %}"
+                            onclick="showConfirmModal(this)">
+                        {% if current_sub %}Switch Plan{% else %}Get Started{% endif %}
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="col-md-3">
+    <div class="card h-100 bg-dark text-white shadow-lg position-relative plan-card-premium {% if current_sub.plan_type == 'premium' and current_sub.duration_months == 3 %}active-plan-border{% else %}border-warning-subtle{% endif %}" 
+         style="border-radius: 16px; transition: all 0.3s ease; border-width: 1.5px; background: linear-gradient(145deg, #1e1a0a, #0d0d0d);">
+        
+        {% if current_sub.plan_type == 'premium' and current_sub.duration_months == 3 %}
+            <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-primary shadow" 
+                  style="z-index: 2; padding: 8px 16px; font-size: 0.7rem; letter-spacing: 1px;">YOUR ACTIVE PLAN</span>
+        {% else %}
+            <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-warning text-dark shadow" 
+                  style="z-index: 2; padding: 8px 16px; font-size: 0.7rem; letter-spacing: 1px; font-weight: bold;">BEST VALUE</span>
+        {% endif %}
+
+        <div class="card-header text-center border-0 pt-4">
+            <h4 class="mb-1 fw-bold text-warning" style="letter-spacing: 0.5px;">Premium</h4>
+            <span class="badge bg-warning text-dark" style="font-size: 0.75rem; opacity: 0.9;">3 Months</span>
+        </div>
+
+        <div class="card-body text-center d-flex flex-column">
+            <div class="mb-4 mt-2">
+                <h1 class="card-title pricing-card-title fw-bold mb-0 text-warning">₹499</h1>
+                <small class="text-secondary fw-light">for 3 months</small>
+            </div>
+
+            <ul class="list-unstyled mt-2 mb-4 text-start mx-auto" style="width: 85%; font-size: 0.9rem;">
+                <li class="mb-3"><i class="bi bi-check-circle-fill text-warning me-2"></i>Unlimited Movies</li>
+                <li class="mb-3"><i class="bi bi-check-circle-fill text-warning me-2"></i>Unlimited Webseries</li>
+                <li class="mb-3"><i class="bi bi-check-circle-fill text-warning me-2"></i>Ad-Free Experience</li>
+                <li class="mb-3"><i class="bi bi-check-circle-fill text-warning me-2"></i>Watch History</li>
+                <li class="mb-3"><i class="bi bi-check-circle-fill text-warning me-2"></i>Liked Videos</li>
+                <li class="mb-3"><i class="bi bi-check-circle-fill text-warning me-2"></i>Notifications</li>
+            </ul>
+
+            <div class="mt-auto pt-3">
+                {% if current_sub and current_sub.plan_type == 'premium' and current_sub.duration_months == 3 %}
+                    <button class="btn btn-primary w-100 py-2 fw-bold disabled shadow" style="border-radius: 10px; opacity: 0.8;">Current Plan</button>
+                {% else %}
+                    <button type="button" 
+                            class="btn btn-outline-warning w-100 py-2 fw-bold plan-btn"
+                            style="border-radius: 10px; transition: all 0.3s ease;"
+                            data-display-name="Premium (3 Months)"
+                            data-plan-url="{% url 'customer_process_subscriptions' 'premium' 3 %}"
+                            onclick="showConfirmModal(this)">
+                        {% if current_sub %}Switch Plan{% else %}Get Started{% endif %}
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- shared modals -->
+<!-- // confirm plan modal -->
+<div class="modal fade" id="confirmPlanModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-white border-secondary">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title">Confirm Plan Selection</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <i class="bi bi-info-circle text-info mb-3" style="font-size: 3rem;"></i>
+                <h4 id="planDisplayName">Plan Name</h4>
+                <p class="text-secondary mt-3">Are you sure you want to activate this plan?</p>
+                
+                {% if current_sub %}
+                <div class="alert alert-warning py-2 small mx-3">
+                    <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                    <strong>Replacement Warning:</strong> Your current <u>{{ current_sub.plan_type|upper }}
+
+                        {% if current_sub.duration_months == 1 %}
+                        ( {{ current_sub.duration_months }} Month )
+                        {% else %}
+                        ( {{ current_sub.duration_months }} Months )
+                        {% endif %}
+                        
+                    </u> plan will be cancelled immediately and replaced.
+                </div>
+                {% endif %}
+            </div>
+            <div class="modal-footer border-secondary">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <a href="#" id="confirmPlanBtn" class="btn btn-primary px-4">Confirm </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ✅ Cancellation Confirmation Modal -->
+<div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title" id="cancelModalLabel">⚠️ Cancel Subscription</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Are you sure you want to cancel your subscription?</strong></p>
+        <p class="text-muted">⚠️ Important:</p>
+        <ul class="text-muted">
+          <li>Your subscription will be cancelled immediately</li>
+          <li>You will lose access to all existing features</li>
+          <li>You can resubscribe anytime</li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <i class="fas fa-arrow-left"></i> Keep Subscription
+        </button>
+        <form method="POST" action="{% url 'customer_cancel_subscription' %}" style="display: inline;">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger">
+            <i class="fas fa-times-circle"></i> Yes, Cancel Now
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<script>
+
+</script>
+{% endblock %}

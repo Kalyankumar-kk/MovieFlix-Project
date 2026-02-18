@@ -1,0 +1,126 @@
+{% extends 'customer_panel/Internship1-janOSUB.html' %}
+{% block content %}
+
+<div id="payment-card-source">
+<div class="container mt-5" style = "height:530px;margin-top:200px;">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white text-center">
+          <h3>Complete Your Payment</h3>
+        </div>
+        <div class="card-body text-center">
+          <h5>{{ plan_type }} Plan - {{ duration }} Month(s)</h5>
+          <h2 class="text-success mt-3 mb-4">
+            ₹{{ amount|floatformat:0|slice:":-2" }}
+          </h2>
+
+          <button id="rzp-button1" class="btn btn-success btn-lg">
+            Pay with Razorpay
+          </button>
+
+          <div class="mt-3">
+            <a href="{% url 'customer_subscriptions' %}" class="text-muted">Cancel</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div> <!-- //close paymetn container -->
+
+<style>
+
+  /* Ensure the source is visible when moved */
+    #payment-card-source {
+        display: block !important;
+    }
+    
+    @media screen and (max-width: 1024px)  {
+        /* Fix the margins for mobile so it doesn't look pushed down */
+        #payment-card-source .container {
+            margin-top: 20px !important; 
+            padding-top: 20px !important;
+            height: auto !important;
+        }
+        
+    }
+</style>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+
+  document.addEventListener("DOMContentLoaded", function() {
+    function teleportContent() {
+        const source = document.getElementById('payment-card-source');
+        const target = document.getElementById('mobile-content-target');
+        
+        // Check if we are in mobile view (width < 1024px)
+        if (window.innerWidth <= 1024 && target && source) {
+            target.appendChild(source);
+            source.style.display = "block";
+        }
+    }
+
+    // Run on load
+    teleportContent();
+    
+    // Run if user rotates phone or changes screen size
+    window.addEventListener('resize', teleportContent);
+});
+
+
+  var options = {
+    "key": "{{ razorpay_key_id }}",
+    "amount": "{{ amount }}",
+    "currency": "{{ currency }}",
+    "name": "MovieFlix",
+    "description": "{{ plan_type }} Subscription",
+    "order_id": "{{ razorpay_order_id }}",
+    "handler": function (response){
+        var form = document.createElement('form');
+        form.method = 'POST';
+        form.action = "{% url 'payment_callback' %}";
+
+        var csrftoken = '{{ csrf_token }}'; // This will be empty due to csrf_exempt, so we skip CSRF.
+
+        var fields = {
+            'razorpay_payment_id': response.razorpay_payment_id,
+            'razorpay_order_id': response.razorpay_order_id,
+            'razorpay_signature': response.razorpay_signature
+        };
+
+        for (var key in fields) {
+          if (fields.hasOwnProperty(key)) {
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = key;
+            input.value = fields[key];
+            form.appendChild(input);
+          }
+        }
+
+        document.body.appendChild(form);
+        form.submit();
+    },
+    "prefill": {
+        "name": "{{ customer_name }}",
+        "email": "{{ customer_email }}",
+        "contact": "{{ customer_phone }}"
+    },
+    "theme": {
+        "color": "#3399cc"
+    }
+  };
+
+  var rzp1 = new Razorpay(options);
+  document.getElementById('rzp-button1').onclick = function(e){
+    rzp1.open();
+    e.preventDefault();
+  }
+</script>
+
+{% endblock %}
+
+{% block mobile_cards %}
+{% endblock %}
