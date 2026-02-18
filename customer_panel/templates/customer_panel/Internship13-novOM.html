@@ -16,7 +16,7 @@
 <link href="{% static 'customer_panel/css/bootstrap.min.css' %}" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 <title>Movieflix Movies Customer</title>
-<link rel="icon" type="image/png" href="https://scontent.fhyd2-2.fna.fbcdn.net/v/t39.30808-6/470677166_122151867554334813_4968100224651989712_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=a5f93a&_nc_ohc=XReKaS319QQQ7kNvwFfKvnB&_nc_oc=Adn7baIumIr1_7HMkEwoGCmoWS7iXO7v5wDC64avM3l5jeOWTsGnzJjtK_aYKghL15tYHlY45uT1Ajj0tKg2lDfn&_nc_zt=23&_nc_ht=scontent.fhyd2-2.fna&_nc_gid=94_8ACsCd8RdLg38zTsPxQ&oh=00_AfuqOcdIM-ohXn97lLp_MqGBD8OopdOZELTX1FlvtF-Q2g&oe=699523E0">
+<link rel="icon" type="image/png" href="{% static 'customer_panel/images/movieflix_logo.png' %}">
 </head>
 <body>
 <div id="mobile-sidebar" 
@@ -24,7 +24,7 @@
     
     <div style="padding: 15px 0;">
         <div style="display: flex; align-items: center; padding: 0 15px; margin-bottom: 20px; margin-top: 5px;">
-            <img style = "position:absolute;left:0;width:150px;height:50px;object-fit: cover;font-size:.7rem" src = "https://scontent.fhyd2-2.fna.fbcdn.net/v/t39.30808-6/470677166_122151867554334813_4968100224651989712_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=a5f93a&_nc_ohc=XReKaS319QQQ7kNvwFfKvnB&_nc_oc=Adn7baIumIr1_7HMkEwoGCmoWS7iXO7v5wDC64avM3l5jeOWTsGnzJjtK_aYKghL15tYHlY45uT1Ajj0tKg2lDfn&_nc_zt=23&_nc_ht=scontent.fhyd2-2.fna&_nc_gid=94_8ACsCd8RdLg38zTsPxQ&oh=00_AfuqOcdIM-ohXn97lLp_MqGBD8OopdOZELTX1FlvtF-Q2g&oe=699523E0">
+            <img style = "position:absolute;left:0;width:150px;height:50px;object-fit: cover;font-size:.7rem" src = "{% static 'customer_panel/images/movieflix_logo.png' %}">
             <button onclick="toggleMobileNav(false)" style="background: none; border: none; color: white; margin-left: auto; padding: 0; cursor: pointer;">
                 <i class="bi bi-x-lg" style="font-size: 1.1rem;"></i>
             </button>
@@ -219,7 +219,7 @@ z-index: 1060; /* Higher than blurred content */
 <div class = "desktop-wrapper "><header>
 <nav class = "bg d-flex align-items-center justify-content-between ms-auto" style = "position:fixed;top:0;width:100%;z-index:1050;height:60px;background-color:black">
     <div class = "mb-0"><h3 style = "color:red;margin-left:10px;margin-bottom:0px;">
-        <img style = "width:150px;height:50px;object-fit: cover;font-size:.7rem" src = "https://scontent.fhyd2-2.fna.fbcdn.net/v/t39.30808-6/470677166_122151867554334813_4968100224651989712_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=a5f93a&_nc_ohc=XReKaS319QQQ7kNvwFfKvnB&_nc_oc=Adn7baIumIr1_7HMkEwoGCmoWS7iXO7v5wDC64avM3l5jeOWTsGnzJjtK_aYKghL15tYHlY45uT1Ajj0tKg2lDfn&_nc_zt=23&_nc_ht=scontent.fhyd2-2.fna&_nc_gid=94_8ACsCd8RdLg38zTsPxQ&oh=00_AfuqOcdIM-ohXn97lLp_MqGBD8OopdOZELTX1FlvtF-Q2g&oe=699523E0">
+        <img style = "width:150px;height:50px;object-fit: cover;font-size:.7rem" src = "{% static 'customer_panel/images/movieflix_logo.png' %}">
     </h3>
     </div>
     <div class = "d-flex">
@@ -571,7 +571,7 @@ z-index: 1060; /* Higher than blurred content */
     
     <header style="position: fixed; top: 0; left: 0; right: 0; height: 60px; background-color: #000; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; z-index: 1050; box-shadow: 0 2px 10px rgba(0,0,0,0.5);">
         <div style="color: #dc3545; font-size: 1.5rem; font-weight: bold;" onclick="toggleMobileNav(true)" style="cursor: pointer;">
-            <img style = "position:absolute;left:-2px;top:7px;width:150px;height:50px;object-fit: cover;font-size:.7rem" src = "https://scontent.fhyd2-2.fna.fbcdn.net/v/t39.30808-6/470677166_122151867554334813_4968100224651989712_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=a5f93a&_nc_ohc=XReKaS319QQQ7kNvwFfKvnB&_nc_oc=Adn7baIumIr1_7HMkEwoGCmoWS7iXO7v5wDC64avM3l5jeOWTsGnzJjtK_aYKghL15tYHlY45uT1Ajj0tKg2lDfn&_nc_zt=23&_nc_ht=scontent.fhyd2-2.fna&_nc_gid=94_8ACsCd8RdLg38zTsPxQ&oh=00_AfuqOcdIM-ohXn97lLp_MqGBD8OopdOZELTX1FlvtF-Q2g&oe=699523E0">
+            <img style = "position:absolute;left:-2px;top:7px;width:150px;height:50px;object-fit: cover;font-size:.7rem"src = "{% static 'customer_panel/images/movieflix_logo.png' %}">
         </div>
 
         <div class = "px-2 py-2 ms-auto me-2 ">
