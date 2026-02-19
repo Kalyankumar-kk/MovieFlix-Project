@@ -254,7 +254,7 @@ body {
             const mobile = document.querySelector('.mobile-wrapper');
 
             if (isMobile && desktop) {
-                desktop.remove();
+                desktop.style.display = 'none';
                 console.log("Performance: Desktop version pruned for mobile speed.");
                 obs.disconnect(); // Stop looking once done
             } else if (!isMobile && mobile) {

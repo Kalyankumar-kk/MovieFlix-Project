@@ -1227,47 +1227,45 @@ document.getElementById('changePasswordModal').addEventListener('hidden.bs.modal
     document.getElementById('confirmnewpassword').value = '';
 });
 
-// notification toggle desktop
-document.getElementById('notifToggle').addEventListener('change', function() {
-    fetch("{% url 'toggle_notifications' %}", {
-        method: 'POST',
-        headers: { 
-            'X-CSRFToken': '{{ csrf_token }}',
-            'Content-Type': 'application/json' 
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.status === 'success') {
-            // Optional: You can remove the alert to make it smoother
-            // alert("Notifications: " + (data.is_enabled ? "ON" : "OFF"));
-            
-            // This reload will now respect the 'checked' logic from Step 2
-            location.reload(); 
-        }
+// notification toggle desktop (Safe Version)
+const desktopToggle = document.getElementById('notifToggle');
+if (desktopToggle) {
+    desktopToggle.addEventListener('change', function() {
+        fetch("{% url 'toggle_notifications' %}", {
+            method: 'POST',
+            headers: { 
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json' 
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                location.reload(); 
+            }
+        });
     });
-});
+}
 
-// notification toggle mobile
-document.getElementById('notifToggleMobile').addEventListener('change', function() {
-    fetch("{% url 'toggle_notifications' %}", {
-        method: 'POST',
-        headers: { 
-            'X-CSRFToken': '{{ csrf_token }}',
-            'Content-Type': 'application/json' 
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.status === 'success') {
-            // Optional: You can remove the alert to make it smoother
-            // alert("Notifications: " + (data.is_enabled ? "ON" : "OFF"));
-            
-            // This reload will now respect the 'checked' logic from Step 2
-            location.reload(); 
-        }
+// notification toggle mobile (Safe Version)
+const mobileToggle = document.getElementById('notifToggleMobile');
+if (mobileToggle) {
+    mobileToggle.addEventListener('change', function() {
+        fetch("{% url 'toggle_notifications' %}", {
+            method: 'POST',
+            headers: { 
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json' 
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                location.reload(); 
+            }
+        });
     });
-});
+}
 // Unified notification(desktop and mobile) logic to clear and mark as read 
 
 // clear individual Notifications
