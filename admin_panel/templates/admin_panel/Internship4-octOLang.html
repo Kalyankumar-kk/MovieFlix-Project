@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <link href="{% static 'admin_panel/css/bootstrap.min.css' %}" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 <title>Movieflix Languages Admin</title>
@@ -80,7 +80,7 @@
     }
 
     .mobile-wrapper {
-        display: none;
+        display: block;
     }
 
     /* Your existing desktop styles */
@@ -154,10 +154,12 @@
         MOBILE VERSION (Bottom Navigation)
     ======================================== */
 @media screen and (max-width: 1024px) {
-    .desktop-wrapper { display: none !important; }
-.mobile-wrapper { display: block !important; }
-body { min-width: 100%; overflow-x: hidden; }
-}
+        body { 
+            min-width: 100%; 
+            overflow-x: hidden; 
+            background-color: #000; /* Ensure black background for mobile app feel */
+        }
+    }   
 
 /* Functional Utility for JS Toggles */
 .show { display: block !important; }
@@ -179,6 +181,32 @@ body.modal-open .content-to-blur { filter: blur(1px); pointer-events: none; }
 .dashboard-card:hover { transform: translateY(-8px); box-shadow: 0 12px 25px rgba(107, 106, 106, 0.7); }
 .side-bar:hover { transform: translateX(8px); }
 </style>
+<script>// script before  wrappers to stop rendering desktop version completely , and imporve mobile version speed
+    // high-speed check to prune the DOM immediately
+    (function() {
+        const isMobile = window.innerWidth <= 1024;
+
+        // Use a MutationObserver to catch the elements the millisecond they appear
+        const observer = new MutationObserver((mutations, obs) => {
+            const desktop = document.querySelector('.desktop-wrapper');
+            const mobile = document.querySelector('.mobile-wrapper');
+
+            if (isMobile && desktop) {
+                desktop.remove();
+                console.log("Performance: Desktop version pruned for mobile speed.");
+                obs.disconnect(); // Stop looking once done
+            } else if (!isMobile && mobile) {
+                mobile.remove();
+                console.log("Performance: Mobile version pruned for desktop view.");
+                obs.disconnect(); // Stop looking once done
+            }
+        });
+
+        observer.observe(document.documentElement, { childList: true, subtree: true });
+    })();
+</script>
+
+
 
 
 <!-- ========================================
